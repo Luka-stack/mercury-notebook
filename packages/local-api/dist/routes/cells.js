@@ -45,6 +45,7 @@ var express_1 = __importDefault(require("express"));
 var promises_1 = __importDefault(require("fs/promises"));
 var createCellsRouter = function (filename, dir) {
     var router = express_1.default.Router();
+    router.use(express_1.default.json());
     var fullPath = path_1.default.join(dir, filename);
     router.get("/cells", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
         var result, err_1;
