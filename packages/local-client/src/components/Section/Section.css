@@ -1,0 +1,31 @@
+.card {
+  margin-top: 16px;
+  background-color: transparent;
+}
+
+.card-header {
+  cursor: pointer;
+  justify-content: flex-end;
+}
+
+.card-content {
+  padding: 1rem;
+}
+
+.section-button {
+  /* top: -2px;
+  left: -2px; */
+  color: #1abc9c;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.section-button:hover {
+  color: #1abc9c;
+  border-color: transparent;
+  background-color: #282f2f;
+}
+
+.close-button:hover {
+  color: #e74c3c;
+}

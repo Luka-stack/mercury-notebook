@@ -1,7 +1,7 @@
-import { ActionType } from "../action-types";
-import { Cell, CellTypes } from "../cell";
+import { ActionType } from '../action-types';
+import { Cell, CellTypes } from '../cell';
 
-export type Direction = "up" | "down";
+export type Direction = 'up' | 'down';
 
 export interface MoveCellAction {
   type: ActionType.MOVE_CELL;
@@ -11,17 +11,31 @@ export interface MoveCellAction {
   };
 }
 
+export interface DeleteChapterAction {
+  type: ActionType.DELETE_CHAPTER;
+  paylaod: string;
+}
+
 export interface DeleteCellAction {
   type: ActionType.DELETE_CELL;
-  payload: string;
+  payload: {
+    cellId: string;
+    chapterId: string;
+  };
 }
 
 export interface InsertCellAfterAction {
   type: ActionType.INSERT_CELL_AFTER;
   payload: {
     id: string | null;
+    chapter: string;
     type: CellTypes;
   };
+}
+
+export interface InsertChapterAfterAction {
+  type: ActionType.INSERT_CHAPTER_AFTER;
+  payload: string | null;
 }
 
 export interface UpdateCellAction {
@@ -71,7 +85,9 @@ export interface SaveCellsErrorAction {
 
 export type Action =
   | MoveCellAction
+  | DeleteChapterAction
   | DeleteCellAction
+  | InsertChapterAfterAction
   | InsertCellAfterAction
   | UpdateCellAction
   | BundleStartAction

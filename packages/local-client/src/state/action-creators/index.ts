@@ -1,6 +1,6 @@
-import { Dispatch } from "redux";
-import axios from "axios";
-import { ActionType } from "../action-types";
+import { Dispatch } from 'redux';
+import axios from 'axios';
+import { ActionType } from '../action-types';
 import {
   UpdateCellAction,
   DeleteCellAction,
@@ -8,10 +8,12 @@ import {
   InsertCellAfterAction,
   Direction,
   Action,
-} from "../actions";
-import { Cell, CellTypes } from "../cell";
-import bundle from "../../bundler";
-import { RootState } from "../reducers";
+  InsertChapterAfterAction,
+  DeleteChapterAction,
+} from '../actions';
+import { Cell, CellTypes } from '../cell';
+import bundle from '../../bundler';
+import { RootState } from '../reducers';
 
 export const updateCell = (id: string, content: string): UpdateCellAction => {
   return {
@@ -23,10 +25,23 @@ export const updateCell = (id: string, content: string): UpdateCellAction => {
   };
 };
 
-export const deleteCell = (id: string): DeleteCellAction => {
+export const deleteChapter = (id: string): DeleteChapterAction => {
+  return {
+    type: ActionType.DELETE_CHAPTER,
+    paylaod: id,
+  };
+};
+
+export const deleteCell = (
+  cellId: string,
+  chapterId: string
+): DeleteCellAction => {
   return {
     type: ActionType.DELETE_CELL,
-    payload: id,
+    payload: {
+      cellId,
+      chapterId,
+    },
   };
 };
 
@@ -40,8 +55,18 @@ export const moveCell = (id: string, direction: Direction): MoveCellAction => {
   };
 };
 
+export const insertChapterAfter = (
+  id: string | null
+): InsertChapterAfterAction => {
+  return {
+    type: ActionType.INSERT_CHAPTER_AFTER,
+    payload: id,
+  };
+};
+
 export const insertCellAfter = (
   id: string | null,
+  chapter: string,
   cellType: CellTypes
 ): InsertCellAfterAction => {
   return {
@@ -49,6 +74,7 @@ export const insertCellAfter = (
     payload: {
       id,
       type: cellType,
+      chapter,
     },
   };
 };
@@ -81,7 +107,7 @@ export const fetchCells = () => {
     dispatch({ type: ActionType.FETCH_CELLS });
 
     try {
-      const { data }: { data: Cell[] } = await axios.get("/cells");
+      const { data }: { data: Cell[] } = await axios.get('/cells');
 
       dispatch({ type: ActionType.FETCH_CELLS_COMPLETE, payload: data });
     } catch (err: any) {
@@ -99,7 +125,7 @@ export const saveCells = () => {
     const cells = order.map((id) => data[id]);
 
     try {
-      await axios.post("/cells", { cells });
+      await axios.post('/cells', { cells });
     } catch (err: any) {
       dispatch({ type: ActionType.SAVE_CELLS_ERROR, payload: err.message });
     }

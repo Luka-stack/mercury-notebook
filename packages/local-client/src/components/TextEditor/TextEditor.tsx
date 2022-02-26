@@ -1,8 +1,9 @@
-import "./text-editor.css";
-import { useState, useEffect, useRef } from "react";
-import MDEditor from "@uiw/react-md-editor";
-import { Cell } from "../state";
-import { useActions } from "../hooks/use-actions";
+import './TextEditor.css';
+import { useState, useEffect, useRef } from 'react';
+import MDEditor from '@uiw/react-md-editor';
+
+import { Cell } from '../../state';
+import { useActions } from '../../hooks/use-actions';
 
 interface TextEditorProps {
   cell: Cell;
@@ -25,10 +26,10 @@ const TextEditor: React.FC<TextEditorProps> = ({ cell }) => {
       setEditting(false);
     };
 
-    document.addEventListener("click", listener, { capture: true });
+    document.addEventListener('click', listener, { capture: true });
 
     return () => {
-      document.removeEventListener("click", listener, { capture: true });
+      document.removeEventListener('click', listener, { capture: true });
     };
   }, []);
 
@@ -37,7 +38,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ cell }) => {
       <div className="text-editor" ref={ref}>
         <MDEditor
           value={cell.content}
-          onChange={(v) => updateCell(cell.id, v || "")}
+          onChange={(v) => updateCell(cell.id, v || '')}
         />
       </div>
     );
@@ -48,7 +49,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ cell }) => {
       <div className="card-content">
         <MDEditor.Markdown
           className="text-editor"
-          source={cell.content || "Click to edit"}
+          source={cell.content || 'Click to edit'}
         />
       </div>
     </div>
