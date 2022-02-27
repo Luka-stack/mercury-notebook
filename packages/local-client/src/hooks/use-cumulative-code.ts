@@ -1,9 +1,14 @@
-import { useTypedSelector } from "./use-typed-selector";
+import { Cell } from '../state';
+import { useTypedSelector } from './use-typed-selector';
 
 export const useCumulativeCode = (cellId: string) => {
   return useTypedSelector((state) => {
-    const { data, order } = state.cells;
-    const orderedCells = order.map((id) => data[id]);
+    const { data, order, chapters } = state.cells;
+    const orderedCells: Cell[] = [];
+
+    order.forEach((sectionId) => {
+      orderedCells.push(...chapters[sectionId].content.map((id) => data[id]));
+    });
 
     const showFunc = `
       import _React from 'react';
@@ -21,10 +26,11 @@ export const useCumulativeCode = (cellId: string) => {
         }
       };
     `;
-    const showFuncNoop = "var show = () => {}";
+    const showFuncNoop = 'var show = () => {}';
     const cumulativeCode = [];
+
     for (let c of orderedCells) {
-      if (c.type === "code") {
+      if (c.type === 'code') {
         if (c.id === cellId) {
           cumulativeCode.push(showFunc);
         } else {
@@ -37,6 +43,7 @@ export const useCumulativeCode = (cellId: string) => {
         break;
       }
     }
-    return cumulativeCode.join("\n");
+
+    return cumulativeCode.join('\n');
   });
 };

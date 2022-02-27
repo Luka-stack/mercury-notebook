@@ -47,24 +47,24 @@ var createCellsRouter = function (filename, dir) {
     var router = express_1.default.Router();
     router.use(express_1.default.json());
     var fullPath = path_1.default.join(dir, filename);
-    router.get("/cells", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    router.get('/cells', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
         var result, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 6]);
-                    return [4 /*yield*/, promises_1.default.readFile(fullPath, { encoding: "utf-8" })];
+                    return [4 /*yield*/, promises_1.default.readFile(fullPath, { encoding: 'utf-8' })];
                 case 1:
                     result = _a.sent();
                     res.send(JSON.parse(result));
                     return [3 /*break*/, 6];
                 case 2:
                     err_1 = _a.sent();
-                    if (!(err_1.code === "ENOENT")) return [3 /*break*/, 4];
-                    return [4 /*yield*/, promises_1.default.writeFile(fullPath, "[]", "utf-8")];
+                    if (!(err_1.code === 'ENOENT')) return [3 /*break*/, 4];
+                    return [4 /*yield*/, promises_1.default.writeFile(fullPath, JSON.stringify(defaultContent), 'utf-8')];
                 case 3:
                     _a.sent();
-                    res.send([]);
+                    res.send(defaultContent);
                     return [3 /*break*/, 5];
                 case 4: throw err_1;
                 case 5: return [3 /*break*/, 6];
@@ -72,16 +72,16 @@ var createCellsRouter = function (filename, dir) {
             }
         });
     }); });
-    router.post("/cells", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var cells;
+    router.post('/cells', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+        var data;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    cells = req.body.cells;
-                    return [4 /*yield*/, promises_1.default.writeFile(fullPath, JSON.stringify(cells), "utf-8")];
+                    data = req.body;
+                    return [4 /*yield*/, promises_1.default.writeFile(fullPath, JSON.stringify(data), 'utf-8')];
                 case 1:
                     _a.sent();
-                    res.send({ status: "ok" });
+                    res.send({ status: 'ok' });
                     return [2 /*return*/];
             }
         });
@@ -89,3 +89,18 @@ var createCellsRouter = function (filename, dir) {
     return router;
 };
 exports.createCellsRouter = createCellsRouter;
+var defaultContent = {
+    chapters: [
+        {
+            id: 'defaultChapter',
+            description: {
+                id: 'chapterDescription',
+                type: 'text',
+                content: '#### Chapter description - click to edit',
+                chapterId: 'defaultChapter',
+            },
+            content: [],
+        },
+    ],
+    cells: [],
+};

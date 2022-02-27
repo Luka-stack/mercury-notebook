@@ -1,14 +1,14 @@
-import "./code-cell.css";
+import './CodeCell.css';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import CodeEditor from "./code-editor";
-import Preview from "./preview";
-import Resizable from "./resizable";
-import { Cell } from "../state";
-import { useActions } from "../hooks/use-actions";
-import { useTypedSelector } from "../hooks/use-typed-selector";
-import { useCumulativeCode } from "../hooks/use-cumulative-code";
+import { Cell } from '../../state';
+import { useActions } from '../../hooks/use-actions';
+import { useTypedSelector } from '../../hooks/use-typed-selector';
+import { useCumulativeCode } from '../../hooks/use-cumulative-code';
+import CodeEditor from '../CodeEditor/CodeEditor';
+import Resizable from '../Resizable/Resizable';
+import Preview from '../Preview/Preview';
 
 interface CodeCellProps {
   cell: Cell;
@@ -39,15 +39,15 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     <Resizable direction="vertical">
       <div
         style={{
-          height: "calc(100% - 10px)",
-          display: "flex",
-          flexDirection: "row",
+          height: 'calc(100% - 10px)',
+          display: 'flex',
+          flexDirection: 'row',
         }}
       >
         <Resizable direction="horizontal">
           <CodeEditor
             initialValue={cell.content}
-            onChange={(value) => updateCell(cell.id, value)}
+            onChange={(value) => updateCell(cell.id, cell.chapterId, value)}
           />
         </Resizable>
         <div className="progress-wrapper">

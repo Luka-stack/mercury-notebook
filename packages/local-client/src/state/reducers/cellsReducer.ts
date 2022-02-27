@@ -1,12 +1,14 @@
-import produce from "immer";
-import { ActionType } from "../action-types";
-import { Action } from "../actions";
-import { Cell } from "../cell";
+import produce from 'immer';
+import { ActionType } from '../action-types';
+import { Action } from '../actions';
+import { Cell } from '../cell';
+import { Chapter } from '../chapter';
 
 interface CellsState {
   loading: boolean;
   error: string | null;
   order: string[];
+  chapters: { [key: string]: Chapter };
   data: { [key: string]: Cell };
 }
 
@@ -14,6 +16,7 @@ const initialState: CellsState = {
   loading: false,
   error: null,
   order: [],
+  chapters: {},
   data: {},
 };
 
@@ -30,11 +33,20 @@ const reducer = produce(
         return state;
 
       case ActionType.FETCH_CELLS_COMPLETE:
-        state.order = action.payload.map((cell) => cell.id);
-        state.data = action.payload.reduce((acc, cell) => {
+        console.log(action.payload);
+
+        state.order = action.payload.chapters.map((chapter) => chapter.id);
+
+        state.chapters = action.payload.chapters.reduce((acc, chapter) => {
+          acc[chapter.id] = chapter;
+          return acc;
+        }, {} as CellsState['chapters']);
+
+        state.data = action.payload.cells.reduce((acc, cell) => {
           acc[cell.id] = cell;
           return acc;
-        }, {} as CellsState["data"]);
+        }, {} as CellsState['data']);
+
         return state;
 
       case ActionType.FETCH_CELLS_ERROR:
@@ -42,20 +54,39 @@ const reducer = produce(
         state.error = action.payload;
         return state;
 
-      case ActionType.UPDATE_CELL:
-        const { id, content } = action.payload;
-        state.data[id].content = content;
+      case ActionType.UPDATE_CELL: {
+        const { id, chapterId, content } = action.payload;
+
+        if (state.data[id]) {
+          state.data[id].content = content;
+        } else {
+          state.chapters[chapterId].description.content = content;
+        }
+
+        return state;
+      }
+
+      case ActionType.DELETE_CHAPTER:
+        state.chapters[action.paylaod].content.forEach((id) => {
+          delete state.data[id];
+        });
+        delete state.chapters[action.paylaod];
+        state.order = state.order.filter((id) => id !== action.paylaod);
+
         return state;
 
       case ActionType.DELETE_CELL:
-        delete state.data[action.payload];
-        state.order = state.order.filter((id) => id !== action.payload);
+        delete state.data[action.payload.cellId];
+        state.chapters[action.payload.chapterId].content = state.chapters[
+          action.payload.chapterId
+        ].content.filter((id) => id !== action.payload.cellId);
+
         return state;
 
-      case ActionType.MOVE_CELL:
+      case ActionType.MOVE_CHAPTER: {
         const { direction } = action.payload;
         const index = state.order.findIndex((id) => id === action.payload.id);
-        const targetIndex = direction === "up" ? index - 1 : index + 1;
+        const targetIndex = direction === 'up' ? index - 1 : index + 1;
 
         if (targetIndex < 0 || targetIndex > state.order.length - 1) {
           return state;
@@ -65,24 +96,76 @@ const reducer = produce(
         state.order[targetIndex] = action.payload.id;
 
         return state;
+      }
+
+      case ActionType.MOVE_CELL:
+        const { direction, chapterId } = action.payload;
+        const index = state.chapters[chapterId].content.findIndex(
+          (id) => id === action.payload.id
+        );
+        const targetIndex = direction === 'up' ? index - 1 : index + 1;
+
+        if (
+          targetIndex < 0 ||
+          targetIndex > state.chapters[chapterId].content.length - 1
+        ) {
+          return state;
+        }
+
+        state.chapters[chapterId].content[index] =
+          state.chapters[chapterId].content[targetIndex];
+        state.chapters[chapterId].content[targetIndex] = action.payload.id;
+
+        return state;
+
+      case ActionType.INSERT_CHAPTER_AFTER:
+        const newId = randomId();
+
+        const chapter: Chapter = {
+          id: newId,
+          content: [],
+          description: {
+            id: randomId(),
+            type: 'text',
+            content: '',
+            chapterId: newId,
+          },
+        };
+
+        state.chapters[chapter.id] = chapter;
+
+        const chapterIndex = state.order.findIndex(
+          (id) => id === action.payload
+        );
+        if (chapterIndex < 0) {
+          state.order.unshift(chapter.id);
+        } else {
+          state.order.splice(chapterIndex + 1, 0, chapter.id);
+        }
+
+        return state;
 
       case ActionType.INSERT_CELL_AFTER:
         const cell: Cell = {
-          content: "",
-          type: action.payload.type,
           id: randomId(),
+          type: action.payload.type,
+          content: '',
+          chapterId: action.payload.chapter,
         };
 
         state.data[cell.id] = cell;
 
-        const foundIndex = state.order.findIndex(
-          (id) => id === action.payload.id
-        );
-
-        if (foundIndex < 0) {
-          state.order.unshift(cell.id);
+        const cellIndex = state.chapters[
+          action.payload.chapter
+        ].content.findIndex((id) => id === action.payload.id);
+        if (cellIndex < 0) {
+          state.chapters[action.payload.chapter].content.unshift(cell.id);
         } else {
-          state.order.splice(foundIndex + 1, 0, cell.id);
+          state.chapters[action.payload.chapter].content.splice(
+            cellIndex + 1,
+            0,
+            cell.id
+          );
         }
 
         return state;
@@ -95,7 +178,7 @@ const reducer = produce(
 );
 
 const randomId = () => {
-  return Math.random().toString(36).substr(2, 5);
+  return Math.random().toString(36).substring(2, 5);
 };
 
 export default reducer;

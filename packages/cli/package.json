@@ -1,6 +1,6 @@
 {
   "name": "mercury-notebook",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "bin": "dist/index.js",
   "publishConfig": {
@@ -17,10 +17,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mercury-notebook/local-client": "^1.0.0"
+    "@mercury-notebook/local-api": "^2.0.0"
   },
   "devDependencies": {
-    "@mercury-notebook/local-api": "^1.0.0",
     "@types/node": "^16.9.4",
     "commander": "^8.2.0",
     "esbuild": "0.8.26",

@@ -9,3 +9,7 @@
 .action-bar:hover {
   opacity: 1;
 }
+
+.is-primary.close-button:hover {
+  background-color: #e74c3c;
+}

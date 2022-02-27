@@ -1,33 +1,58 @@
-import { ActionType } from "../action-types";
-import { Cell, CellTypes } from "../cell";
+import { ActionType } from '../action-types';
+import { Cell, CellTypes } from '../cell';
+import { Chapter } from '../chapter';
 
-export type Direction = "up" | "down";
+export type Direction = 'up' | 'down';
 
-export interface MoveCellAction {
-  type: ActionType.MOVE_CELL;
+export interface MoveChapterAction {
+  type: ActionType.MOVE_CHAPTER;
   payload: {
     id: string;
     direction: Direction;
   };
 }
 
+export interface MoveCellAction {
+  type: ActionType.MOVE_CELL;
+  payload: {
+    id: string;
+    direction: Direction;
+    chapterId: string;
+  };
+}
+
+export interface DeleteChapterAction {
+  type: ActionType.DELETE_CHAPTER;
+  paylaod: string;
+}
+
 export interface DeleteCellAction {
   type: ActionType.DELETE_CELL;
-  payload: string;
+  payload: {
+    cellId: string;
+    chapterId: string;
+  };
 }
 
 export interface InsertCellAfterAction {
   type: ActionType.INSERT_CELL_AFTER;
   payload: {
     id: string | null;
+    chapter: string;
     type: CellTypes;
   };
+}
+
+export interface InsertChapterAfterAction {
+  type: ActionType.INSERT_CHAPTER_AFTER;
+  payload: string | null;
 }
 
 export interface UpdateCellAction {
   type: ActionType.UPDATE_CELL;
   payload: {
     id: string;
+    chapterId: string;
     content: string;
   };
 }
@@ -56,7 +81,10 @@ export interface FetchCellsAction {
 
 export interface FetchCellsCompleteAction {
   type: ActionType.FETCH_CELLS_COMPLETE;
-  payload: Cell[];
+  payload: {
+    chapters: Chapter[];
+    cells: Cell[];
+  };
 }
 
 export interface FetchCellsErrorAction {
@@ -70,8 +98,11 @@ export interface SaveCellsErrorAction {
 }
 
 export type Action =
+  | MoveChapterAction
   | MoveCellAction
+  | DeleteChapterAction
   | DeleteCellAction
+  | InsertChapterAfterAction
   | InsertCellAfterAction
   | UpdateCellAction
   | BundleStartAction
