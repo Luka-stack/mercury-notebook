@@ -1,5 +1,8 @@
 import './ActionBar.css';
+import React from 'react';
+
 import { useActions } from '../../hooks/use-actions';
+import { Direction } from '../../state/actions';
 
 interface ActionBarProps {
   cellId: string;
@@ -16,6 +19,16 @@ const ActionBar: React.FC<ActionBarProps> = ({
 }) => {
   const { moveCell, deleteCell } = useActions();
 
+  const onMoveCell = (
+    event: React.MouseEvent,
+    id: string,
+    direction: string,
+    chapterId: string
+  ) => {
+    event.stopPropagation();
+    moveCell(id, direction as Direction, chapterId);
+  };
+
   return (
     <div className="action-bar">
       <button
@@ -28,7 +41,7 @@ const ActionBar: React.FC<ActionBarProps> = ({
       </button>
       <button
         className="button is-primary is-small"
-        onClick={() => moveCell(cellId, 'up')}
+        onClick={(e) => onMoveCell(e, cellId, 'up', chapterId)}
       >
         <span className="icon">
           <i className="fas fa-arrow-up"></i>
@@ -36,7 +49,7 @@ const ActionBar: React.FC<ActionBarProps> = ({
       </button>
       <button
         className="button is-primary is-small"
-        onClick={() => moveCell(cellId, 'down')}
+        onClick={(e) => onMoveCell(e, cellId, 'down', chapterId)}
       >
         <span className="icon">
           <i className="fas fa-arrow-down"></i>

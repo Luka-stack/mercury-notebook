@@ -1,8 +1,9 @@
 import './Section.css';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import ConfirmModal from '../Modals/ConfirmModal';
 import { useActions } from '../../hooks/use-actions';
+import { Direction } from '../../state/actions';
 
 interface SectionProps {
   id: string;
@@ -13,7 +14,7 @@ const Section: React.FC<SectionProps> = ({ id, description, children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const { deleteChapter } = useActions();
+  const { deleteChapter, moveChapter } = useActions();
 
   const onDeleteClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -21,12 +22,21 @@ const Section: React.FC<SectionProps> = ({ id, description, children }) => {
     if ((children as Array<any>)[1].length) {
       setShowModal(true);
     } else {
-      onConfirm();
+      onConfirmModal();
     }
   };
 
-  const onConfirm = () => {
+  const onConfirmModal = () => {
     deleteChapter(id);
+  };
+
+  const onMoveClick = (
+    event: React.MouseEvent,
+    id: string,
+    direction: string
+  ) => {
+    event.stopPropagation();
+    moveChapter(id, direction as Direction);
   };
 
   return (
@@ -37,12 +47,18 @@ const Section: React.FC<SectionProps> = ({ id, description, children }) => {
             <i className={`fas ${isOpen ? 'fa-minus' : 'fa-plus'}`}></i>
           </span>
         </button>
-        <button className="button section-button">
+        <button
+          className="button section-button"
+          onClick={(e) => onMoveClick(e, id, 'up')}
+        >
           <span className="icon">
             <i className="fas fa-arrow-up"></i>
           </span>
         </button>
-        <button className="button section-button">
+        <button
+          className="button section-button"
+          onClick={(e) => onMoveClick(e, id, 'down')}
+        >
           <span className="icon">
             <i className="fas fa-arrow-down"></i>
           </span>
@@ -66,7 +82,7 @@ const Section: React.FC<SectionProps> = ({ id, description, children }) => {
         contnet="You are about to delete chapter with multiple cells."
         isShowing={showModal}
         setIsShowing={setShowModal}
-        onConfirm={onConfirm}
+        onConfirm={onConfirmModal}
       />
     </div>
   );

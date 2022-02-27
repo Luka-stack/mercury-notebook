@@ -1,13 +1,23 @@
 import { ActionType } from '../action-types';
 import { Cell, CellTypes } from '../cell';
+import { Chapter } from '../chapter';
 
 export type Direction = 'up' | 'down';
+
+export interface MoveChapterAction {
+  type: ActionType.MOVE_CHAPTER;
+  payload: {
+    id: string;
+    direction: Direction;
+  };
+}
 
 export interface MoveCellAction {
   type: ActionType.MOVE_CELL;
   payload: {
     id: string;
     direction: Direction;
+    chapterId: string;
   };
 }
 
@@ -42,6 +52,7 @@ export interface UpdateCellAction {
   type: ActionType.UPDATE_CELL;
   payload: {
     id: string;
+    chapterId: string;
     content: string;
   };
 }
@@ -70,7 +81,10 @@ export interface FetchCellsAction {
 
 export interface FetchCellsCompleteAction {
   type: ActionType.FETCH_CELLS_COMPLETE;
-  payload: Cell[];
+  payload: {
+    chapters: Chapter[];
+    cells: Cell[];
+  };
 }
 
 export interface FetchCellsErrorAction {
@@ -84,6 +98,7 @@ export interface SaveCellsErrorAction {
 }
 
 export type Action =
+  | MoveChapterAction
   | MoveCellAction
   | DeleteChapterAction
   | DeleteCellAction

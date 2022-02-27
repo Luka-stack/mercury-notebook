@@ -4,6 +4,7 @@ export enum ActionType {
   INSERT_CELL_AFTER = 'insert_cell_after',
   UPDATE_CELL = 'update_cell',
 
+  MOVE_CHAPTER = 'move_chapter',
   DELETE_CHAPTER = 'delete_chapter',
   INSERT_CHAPTER_AFTER = 'insert_chapter_after',
 

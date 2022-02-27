@@ -1,16 +1,8 @@
 import produce from 'immer';
-import { CellTypes } from '..';
 import { ActionType } from '../action-types';
 import { Action } from '../actions';
 import { Cell } from '../cell';
 import { Chapter } from '../chapter';
-
-const tmpCell = {
-  id: 'labelCell',
-  type: 'text' as CellTypes,
-  content: '#### Chapter description - click to edit',
-  chapterId: 'tmp',
-};
 
 interface CellsState {
   loading: boolean;
@@ -23,10 +15,8 @@ interface CellsState {
 const initialState: CellsState = {
   loading: false,
   error: null,
-  order: ['tmp'],
-  chapters: {
-    tmp: { id: 'tmp', description: tmpCell, content: [] },
-  },
+  order: [],
+  chapters: {},
   data: {},
 };
 
@@ -43,11 +33,20 @@ const reducer = produce(
         return state;
 
       case ActionType.FETCH_CELLS_COMPLETE:
-        state.order = action.payload.map((cell) => cell.id);
-        state.data = action.payload.reduce((acc, cell) => {
+        console.log(action.payload);
+
+        state.order = action.payload.chapters.map((chapter) => chapter.id);
+
+        state.chapters = action.payload.chapters.reduce((acc, chapter) => {
+          acc[chapter.id] = chapter;
+          return acc;
+        }, {} as CellsState['chapters']);
+
+        state.data = action.payload.cells.reduce((acc, cell) => {
           acc[cell.id] = cell;
           return acc;
         }, {} as CellsState['data']);
+
         return state;
 
       case ActionType.FETCH_CELLS_ERROR:
@@ -55,10 +54,17 @@ const reducer = produce(
         state.error = action.payload;
         return state;
 
-      case ActionType.UPDATE_CELL:
-        const { id, content } = action.payload;
-        state.data[id].content = content;
+      case ActionType.UPDATE_CELL: {
+        const { id, chapterId, content } = action.payload;
+
+        if (state.data[id]) {
+          state.data[id].content = content;
+        } else {
+          state.chapters[chapterId].description.content = content;
+        }
+
         return state;
+      }
 
       case ActionType.DELETE_CHAPTER:
         state.chapters[action.paylaod].content.forEach((id) => {
@@ -77,7 +83,7 @@ const reducer = produce(
 
         return state;
 
-      case ActionType.MOVE_CELL:
+      case ActionType.MOVE_CHAPTER: {
         const { direction } = action.payload;
         const index = state.order.findIndex((id) => id === action.payload.id);
         const targetIndex = direction === 'up' ? index - 1 : index + 1;
@@ -88,6 +94,27 @@ const reducer = produce(
 
         state.order[index] = state.order[targetIndex];
         state.order[targetIndex] = action.payload.id;
+
+        return state;
+      }
+
+      case ActionType.MOVE_CELL:
+        const { direction, chapterId } = action.payload;
+        const index = state.chapters[chapterId].content.findIndex(
+          (id) => id === action.payload.id
+        );
+        const targetIndex = direction === 'up' ? index - 1 : index + 1;
+
+        if (
+          targetIndex < 0 ||
+          targetIndex > state.chapters[chapterId].content.length - 1
+        ) {
+          return state;
+        }
+
+        state.chapters[chapterId].content[index] =
+          state.chapters[chapterId].content[targetIndex];
+        state.chapters[chapterId].content[targetIndex] = action.payload.id;
 
         return state;
 
