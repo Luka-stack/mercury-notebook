@@ -6,7 +6,7 @@ interface NavbarItemProps {
 
 const DropdownItem: React.FC<NavbarItemProps> = ({ label, desc, onClick }) => {
   return (
-    <b className="cst-navbar-item">
+    <b className="cst-navbar-item" onClick={onClick}>
       <div className="cst-navbar-content">
         <p>
           <strong>{label}</strong>

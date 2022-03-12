@@ -16,4 +16,15 @@ export enum ActionType {
   FETCH_CELLS_ERROR = 'fetch_cells_error',
 
   SAVE_CELLS_ERROR = 'save_cells_error',
+
+  CREATE_NOTEBOOK_COMPLETE = 'create_notebook_complete',
+  CREATE_NOTEBOOK_ERROR = 'create_notebook_error',
+
+  FETCH_PARTIAL_TREE = 'fetch_partial_tree',
+  FETCH_WHOLE_TREE = 'fetch_whole_tree',
+  FETCH_TREE_COMPLETE = 'fetch_tree_complete',
+  FETCH_TREE_ERROR = 'fetch_tree_error',
+
+  SORT_TREE_BY_NAME = 'sort_tree_by_name',
+  SORT_TREE_BY_DATE = 'sort_tree_by_date',
 }

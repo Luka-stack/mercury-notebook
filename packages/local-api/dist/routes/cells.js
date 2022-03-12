@@ -43,41 +43,69 @@ exports.createCellsRouter = void 0;
 var path_1 = __importDefault(require("path"));
 var express_1 = __importDefault(require("express"));
 var promises_1 = __importDefault(require("fs/promises"));
-var createCellsRouter = function (filename, dir) {
+var createCellsRouter = function (dir) {
     var router = express_1.default.Router();
     router.use(express_1.default.json());
-    var fullPath = path_1.default.join(dir, filename);
-    router.get('/cells', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var result, err_1;
+    router.get('/test', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            res.send({ ok: 'Ok' });
+            return [2 /*return*/];
+        });
+    }); });
+    router.post('/createNotebook', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+        var filepath, fullPath, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 6]);
-                    return [4 /*yield*/, promises_1.default.readFile(fullPath, { encoding: 'utf-8' })];
+                    console.log('Inside Create Notebook');
+                    filepath = req.body.filepath;
+                    fullPath = path_1.default.join(dir, filepath);
+                    _a.label = 1;
                 case 1:
-                    result = _a.sent();
-                    res.send(JSON.parse(result));
-                    return [3 /*break*/, 6];
-                case 2:
-                    err_1 = _a.sent();
-                    if (!(err_1.code === 'ENOENT')) return [3 /*break*/, 4];
+                    _a.trys.push([1, 3, , 4]);
                     return [4 /*yield*/, promises_1.default.writeFile(fullPath, JSON.stringify(defaultContent), 'utf-8')];
-                case 3:
+                case 2:
                     _a.sent();
-                    res.send(defaultContent);
-                    return [3 /*break*/, 5];
-                case 4: throw err_1;
-                case 5: return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    res.send({ status: 'ok' });
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_1 = _a.sent();
+                    console.log('Route:createNotebook -> ', err_1);
+                    throw err_1;
+                case 4: return [2 /*return*/];
             }
         });
     }); });
     router.post('/cells', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var data;
+        var filepath, fullPath, result, err_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    filepath = req.body.filepath;
+                    fullPath = path_1.default.join(dir, filepath);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, promises_1.default.readFile(fullPath, { encoding: 'utf-8' })];
+                case 2:
+                    result = _a.sent();
+                    res.send(JSON.parse(result));
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_2 = _a.sent();
+                    throw err_2;
+                case 4: return [2 /*return*/];
+            }
+        });
+    }); });
+    router.post('/saveNotebook', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+        var filepath, data, fullPath;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    filepath = req.body.filepath;
                     data = req.body;
+                    fullPath = path_1.default.join(dir, filepath);
                     return [4 /*yield*/, promises_1.default.writeFile(fullPath, JSON.stringify(data), 'utf-8')];
                 case 1:
                     _a.sent();

@@ -97,6 +97,15 @@ export interface SaveCellsErrorAction {
   payload: string;
 }
 
+export interface CreateNotebookCompleteAction {
+  type: ActionType.CREATE_NOTEBOOK_COMPLETE;
+}
+
+export interface CreateNotebookErrorAction {
+  type: ActionType.CREATE_NOTEBOOK_ERROR;
+  payload: string;
+}
+
 export type Action =
   | MoveChapterAction
   | MoveCellAction
@@ -110,4 +119,6 @@ export type Action =
   | FetchCellsAction
   | FetchCellsCompleteAction
   | FetchCellsErrorAction
-  | SaveCellsErrorAction;
+  | SaveCellsErrorAction
+  | CreateNotebookCompleteAction
+  | CreateNotebookErrorAction;

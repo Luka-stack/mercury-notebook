@@ -35,45 +35,38 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.serveCommand = void 0;
-var path_1 = __importDefault(require("path"));
-var commander_1 = require("commander");
 var local_api_1 = require("@mercury-notebook/local-api");
+var commander_1 = require("commander");
 var isProduction = process.env.NODE_ENV === 'production';
 exports.serveCommand = new commander_1.Command()
-    .command('serve [filename]')
-    .description('Open a file for editing')
+    .command('serve')
+    .description('Open a Mercury Notebook Hub')
     .option('-p, --port <number>', 'port to run server on', '4005')
-    .action(function (filename, options) {
-    if (filename === void 0) { filename = 'notebook.js'; }
-    return __awaiter(void 0, void 0, void 0, function () {
-        var dir, err_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    dir = path_1.default.join(process.cwd(), path_1.default.dirname(filename));
-                    return [4 /*yield*/, (0, local_api_1.serve)(+options.port, path_1.default.basename(filename), dir, !isProduction)];
-                case 1:
-                    _a.sent();
-                    console.log("Opened " + filename + ". Navigate to http://localhost:" + options.port + " to edit the file");
-                    return [3 /*break*/, 3];
-                case 2:
-                    err_1 = _a.sent();
-                    if (err_1.code === 'EADDRINUSE') {
-                        console.log("Port " + options.port + " is in use. Try running on a different port.");
-                    }
-                    else {
-                        console.log('Heres the problem', err_1.message);
-                    }
-                    process.exit(1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
+    .action(function (options) { return __awaiter(void 0, void 0, void 0, function () {
+    var dir, err_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                dir = process.cwd();
+                return [4 /*yield*/, (0, local_api_1.serve)(+options.port, dir, !isProduction)];
+            case 1:
+                _a.sent();
+                console.log("To use Mercury Notebook hub navigate to http://localhost:" + options.port + ".");
+                return [3 /*break*/, 3];
+            case 2:
+                err_1 = _a.sent();
+                if (err_1.code === 'EADDRINUSE') {
+                    console.log("Port " + options.port + " is in use. Try running on a different port.");
+                }
+                else {
+                    console.log('Heres the problem', err_1.message);
+                }
+                process.exit(1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
     });
-});
+}); });

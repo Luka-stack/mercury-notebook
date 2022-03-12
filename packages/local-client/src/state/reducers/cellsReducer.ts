@@ -33,8 +33,6 @@ const reducer = produce(
         return state;
 
       case ActionType.FETCH_CELLS_COMPLETE:
-        console.log(action.payload);
-
         state.order = action.payload.chapters.map((chapter) => chapter.id);
 
         state.chapters = action.payload.chapters.reduce((acc, chapter) => {
@@ -167,6 +165,11 @@ const reducer = produce(
             cell.id
           );
         }
+
+        return state;
+
+      case ActionType.CREATE_NOTEBOOK_ERROR:
+        console.log(action.payload);
 
         return state;
 

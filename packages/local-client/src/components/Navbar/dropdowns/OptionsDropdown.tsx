@@ -1,5 +1,3 @@
-import './Dropdown.css';
-
 import DropdownItem from './DropdownItem';
 
 const OptionsDropdown = () => {

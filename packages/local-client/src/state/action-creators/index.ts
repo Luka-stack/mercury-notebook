@@ -16,6 +16,7 @@ import { Cell, CellTypes } from '../cell';
 import { Chapter } from '../chapter';
 import bundle from '../../bundler';
 import { RootState } from '../reducers';
+import { v4 as uuidv4 } from 'uuid';
 
 export const updateCell = (
   id: string,
@@ -132,12 +133,42 @@ export const fetchCells = () => {
     dispatch({ type: ActionType.FETCH_CELLS });
 
     try {
+      const filepath = window.location.pathname
+        .split('/notebooks/')
+        .slice(1)
+        .join('/');
+
       const { data }: { data: { chapters: Chapter[]; cells: Cell[] } } =
-        await axios.get('/cells');
+        await axios.post('/cells', {
+          filepath,
+        });
 
       dispatch({ type: ActionType.FETCH_CELLS_COMPLETE, payload: data });
     } catch (err: any) {
+      console.log('asd');
       dispatch({ type: ActionType.FETCH_CELLS_ERROR, payload: err.message });
+      // window.open('404', '_self');
+      window.open(`${window.location.origin}/404`, '_self');
+    }
+  };
+};
+
+export const createNotebook = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    try {
+      const filepath = `MrNote-${uuidv4().substring(0, 8)}.js`;
+
+      await axios.post('/createNotebook', {
+        filepath,
+      });
+
+      dispatch({ type: ActionType.CREATE_NOTEBOOK_COMPLETE });
+      window.open(`/notebooks/${filepath}`);
+    } catch (err: any) {
+      dispatch({
+        type: ActionType.CREATE_NOTEBOOK_ERROR,
+        payload: err.message,
+      });
     }
   };
 };
@@ -155,10 +186,16 @@ export const saveCells = () => {
       chapter.content.forEach((id) => orderedcells.push(data[id]));
     });
 
+    const filepath = window.location.pathname
+      .split('/notebooks/')
+      .slice(1)
+      .join('/');
+
     try {
-      await axios.post('/cells', {
+      await axios.post(`/saveNotebook`, {
         chapters: orderedChapters,
         cells: orderedcells,
+        filepath,
       });
     } catch (err: any) {
       dispatch({ type: ActionType.SAVE_CELLS_ERROR, payload: err.message });

@@ -15,28 +15,39 @@ interface Chapter {
   content: string[];
 }
 
-export const createCellsRouter = (filename: string, dir: string) => {
+export const createNotebooksRouter = (dir: string) => {
   const router = express.Router();
   router.use(express.json());
-  const fullPath = path.join(dir, filename);
 
-  router.get('/cells', async (req, res) => {
+  router.post('/notebooks/create', async (req, res) => {
+    const { filepath }: { filepath: string } = req.body;
+    const fullPath = path.join(dir, filepath);
+
     try {
-      const result = await fs.readFile(fullPath, { encoding: 'utf-8' });
-
-      res.send(JSON.parse(result));
+      await fs.writeFile(fullPath, JSON.stringify(defaultContent), 'utf-8');
+      res.send({ status: 'ok' });
     } catch (err: any) {
-      if (err.code === 'ENOENT') {
-        await fs.writeFile(fullPath, JSON.stringify(defaultContent), 'utf-8');
-        res.send(defaultContent);
-      } else {
-        throw err;
-      }
+      throw err;
     }
   });
 
-  router.post('/cells', async (req, res) => {
+  router.post('/notebooks/read', async (req, res) => {
+    const { filepath }: { filepath: string } = req.body;
+    const fullPath = path.join(dir, filepath);
+
+    try {
+      const result = await fs.readFile(fullPath, { encoding: 'utf-8' });
+      res.send(JSON.parse(result));
+    } catch (err: any) {
+      res.status(404).send({ error: 'Not Found' });
+      throw err;
+    }
+  });
+
+  router.post('/notebooks/save', async (req, res) => {
+    const { filepath }: { filepath: string } = req.body;
     const data: { chapters: Chapter[]; cells: Cell[] } = req.body;
+    const fullPath = path.join(dir, filepath);
 
     await fs.writeFile(fullPath, JSON.stringify(data), 'utf-8');
 
