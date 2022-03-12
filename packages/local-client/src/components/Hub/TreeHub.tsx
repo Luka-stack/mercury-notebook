@@ -26,9 +26,13 @@ const TreeHub = () => {
     setSortingOrder([name, !sortingOrder[1]]);
   };
 
-  const onFolderClick = (tree: Tree) => {
-    fetchPartialTree(tree.path.replace(root, '\\'));
-    setCurrDir(tree.path.replace(root + '\\', ''));
+  const onTreeElementClick = (tree: Tree) => {
+    if (tree.type === 'directory') {
+      fetchPartialTree(tree.path.replace(root, '\\'));
+      setCurrDir(tree.path.replace(root + '\\', ''));
+    } else {
+      window.open(`/notebooks/${tree.path.replace(root + '\\', '')}`);
+    }
   };
 
   const onBreadcrumbClick = (path: string) => {
@@ -43,8 +47,12 @@ const TreeHub = () => {
   }, []);
 
   const renderFiles = () => {
-    if (tree === null) {
-      return null;
+    if (tree === null || !tree.children.length) {
+      return (
+        <tr>
+          <td colSpan={4}>Folder is empty</td>
+        </tr>
+      );
     }
 
     let sorted: Tree[] = tree.children.slice();
@@ -68,7 +76,7 @@ const TreeHub = () => {
           ></i>
         </td>
         <td colSpan={2}>
-          <span className="link" onClick={() => onFolderClick(child)}>
+          <span className="link" onClick={() => onTreeElementClick(child)}>
             {child.name}
           </span>
         </td>
@@ -111,7 +119,7 @@ const TreeHub = () => {
   );
 
   const renderDateBadge = (
-    <th style={{ width: '10%', textAlign: 'center', cursor: 'pointer' }}>
+    <th style={{ width: '145px', textAlign: 'center', cursor: 'pointer' }}>
       <span className="tag is-dark" onClick={() => onSortClick(false)}>
         Last Modified
         {!sortingOrder[0] && (
@@ -127,9 +135,15 @@ const TreeHub = () => {
 
   if (loading) {
     return (
-      <progress className="progress is-small is-primary" max="100">
-        15%
-      </progress>
+      <div className="tree load-container">
+        <progress
+          className="progress is-small is-primary"
+          max="100"
+          style={{ width: '50%' }}
+        >
+          15%
+        </progress>
+      </div>
     );
   }
 
@@ -145,7 +159,7 @@ const TreeHub = () => {
                     <span className="icon">
                       <i
                         className="fa fa-folder"
-                        style={{ color: '#375a7f', cursor: 'pointer' }}
+                        style={{ color: '#1abc9c', cursor: 'pointer' }}
                         onClick={() => onBreadcrumbClick('')}
                       />
                     </span>

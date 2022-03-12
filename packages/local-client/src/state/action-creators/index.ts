@@ -139,16 +139,14 @@ export const fetchCells = () => {
         .join('/');
 
       const { data }: { data: { chapters: Chapter[]; cells: Cell[] } } =
-        await axios.post('/cells', {
+        await axios.post('http://localhost:4005/notebooks/read', {
           filepath,
         });
 
       dispatch({ type: ActionType.FETCH_CELLS_COMPLETE, payload: data });
     } catch (err: any) {
-      console.log('asd');
       dispatch({ type: ActionType.FETCH_CELLS_ERROR, payload: err.message });
-      // window.open('404', '_self');
-      window.open(`${window.location.origin}/404`, '_self');
+      // window.open(`${window.location.origin}/404`, '_self');
     }
   };
 };
@@ -158,12 +156,12 @@ export const createNotebook = () => {
     try {
       const filepath = `MrNote-${uuidv4().substring(0, 8)}.js`;
 
-      await axios.post('/createNotebook', {
+      await axios.post('http://localhost:4005/notebooks/create', {
         filepath,
       });
 
       dispatch({ type: ActionType.CREATE_NOTEBOOK_COMPLETE });
-      window.open(`/notebooks/${filepath}`);
+      // window.open(`/notebooks/${filepath}`);
     } catch (err: any) {
       dispatch({
         type: ActionType.CREATE_NOTEBOOK_ERROR,
@@ -192,7 +190,7 @@ export const saveCells = () => {
       .join('/');
 
     try {
-      await axios.post(`/saveNotebook`, {
+      await axios.post(`http://localhost:4005/notebooks/save`, {
         chapters: orderedChapters,
         cells: orderedcells,
         filepath,

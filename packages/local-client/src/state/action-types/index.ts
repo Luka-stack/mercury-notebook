@@ -27,4 +27,7 @@ export enum ActionType {
 
   SORT_TREE_BY_NAME = 'sort_tree_by_name',
   SORT_TREE_BY_DATE = 'sort_tree_by_date',
+
+  CREATE_FOLDER = 'create_folder',
+  CREATE_FOLDER_ERROR = 'create_folder_error',
 }

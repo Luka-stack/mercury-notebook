@@ -4,6 +4,7 @@ import { ActionType } from '../action-types';
 import { Action } from '../actions/treeActions';
 import * as Actions from '../actions/treeActions';
 import { Tree } from '../tree';
+import { v4 as uuidv4 } from 'uuid';
 
 export const fetchPartialTree = (filepath: string) => {
   return async (dispatch: Dispatch<Action>) => {
@@ -27,9 +28,18 @@ export const fetchPartialTree = (filepath: string) => {
   };
 };
 
-export const sortTreeByName = (order: string): Actions.SortTreeByNameAction => {
-  return {
-    type: ActionType.SORT_TREE_BY_NAME,
-    payload: order,
+export const createFolder = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch({ type: ActionType.CREATE_FOLDER });
+
+    try {
+      const dirpath = `Folder-${uuidv4().substring(0, 8)}`;
+
+      await axios.post('http://localhost:4005/trees/folder', {
+        dirpath,
+      });
+    } catch (err: any) {
+      dispatch({ type: ActionType.CREATE_FOLDER_ERROR, payload: err.message });
+    }
   };
 };

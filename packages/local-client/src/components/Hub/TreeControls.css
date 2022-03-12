@@ -1,0 +1,21 @@
+.tree-controls.container {
+  padding: 25px;
+  padding-bottom: 0px;
+  display: flex;
+  justify-content: center;
+}
+
+.tree-controls.notification {
+  width: 90%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0;
+  padding: 10px;
+}
+
+.tree-controls .button {
+  margin-right: 16px;
+}
+
+.tree-controls .button.icon-button {
+  padding: 4px;
+}

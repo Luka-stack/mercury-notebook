@@ -1,5 +1,9 @@
+.cst-navbar.container {
+  display: flex;
+  justify-content: center;
+}
+
 .cst-navbar {
-  background-color: #282f2f;
   color: #fff;
   min-height: 4rem;
   align-items: stretch;

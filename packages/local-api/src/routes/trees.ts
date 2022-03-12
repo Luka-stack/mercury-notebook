@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs/promises';
 import express from 'express';
 import directoryTree from 'directory-tree';
 
@@ -23,6 +24,19 @@ export const createTreesRouter = (root: string) => {
     res.send(
       directoryTree(root, { extensions: /\.js$/, attributes: ['type'] })
     );
+  });
+
+  router.post('/trees/folder', async (req, res) => {
+    const { dirpath }: { dirpath: string } = req.body;
+    const fullPath = path.join(root, dirpath);
+
+    try {
+      await fs.mkdir(fullPath);
+      res.send({ status: 'ok' });
+    } catch (err: any) {
+      console.log(err);
+      throw err;
+    }
   });
 
   return router;

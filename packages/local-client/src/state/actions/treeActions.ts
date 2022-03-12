@@ -19,8 +19,12 @@ export interface FetchTreeErrorAction {
   payload: string;
 }
 
-export interface SortTreeByNameAction {
-  type: ActionType.SORT_TREE_BY_NAME;
+export interface CreateFolderAction {
+  type: ActionType.CREATE_FOLDER;
+}
+
+export interface CreateFolderErrorAction {
+  type: ActionType.CREATE_FOLDER_ERROR;
   payload: string;
 }
 
@@ -29,4 +33,5 @@ export type Action =
   | FetchWholeTreeAction
   | FetchTreeCompleteAction
   | FetchTreeErrorAction
-  | SortTreeByNameAction;
+  | CreateFolderAction
+  | CreateFolderErrorAction;

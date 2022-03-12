@@ -1,22 +1,28 @@
+import { ReactNode } from 'react';
 import './Navbar.css';
 
-import FileDropdown from './dropdowns/FileDropdown';
-import OptionsDropdown from './dropdowns/OptionsDropdown';
+interface NavbarProps {
+  width?: string;
+  children?: ReactNode;
+}
 
-const Navbar = () => {
+const Navbar: React.FC<NavbarProps> = ({ width, children }) => {
+  console.log(children);
+
   return (
-    <nav className="cst-navbar">
-      <div className="cst-navbar-brand">
-        <b>Mercury</b>
-      </div>
+    <div style={{ backgroundColor: '#375a7f' }}>
+      <div className="cst-navbar container">
+        <nav className="cst-navbar" style={{ width: width }}>
+          <div className="cst-navbar-brand">
+            <b>Mercury</b>
+          </div>
 
-      <div className="cst-navbar-menu">
-        <div className="cst-navbar-start">
-          <FileDropdown />
-          <OptionsDropdown />
-        </div>
+          <div className="cst-navbar-menu">
+            <div className="cst-navbar-start">{children}</div>
+          </div>
+        </nav>
       </div>
-    </nav>
+    </div>
   );
 };
 

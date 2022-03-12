@@ -37,7 +37,12 @@ export const createNotebooksRouter = (dir: string) => {
 
     try {
       const result = await fs.readFile(fullPath, { encoding: 'utf-8' });
-      res.send(JSON.parse(result));
+
+      try {
+        res.send(JSON.parse(result));
+      } catch (err: any) {
+        // res.status(400).send({ error: 'Error while parsing file' });
+      }
     } catch (err: any) {
       res.status(404).send({ error: 'Not Found' });
       throw err;
