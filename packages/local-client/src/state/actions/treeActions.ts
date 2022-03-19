@@ -28,10 +28,22 @@ export interface CreateFolderErrorAction {
   payload: string;
 }
 
+export interface UpdateTreeAction {
+  type: ActionType.UPDATE_TREE;
+  payload: Tree | null;
+}
+
+export interface UpdateUsedNotebooksAction {
+  type: ActionType.UPDATE_USED_NOTEBOOKS;
+  payload: Set<string>;
+}
+
 export type Action =
   | FetchPartialTreeAction
   | FetchWholeTreeAction
   | FetchTreeCompleteAction
   | FetchTreeErrorAction
   | CreateFolderAction
-  | CreateFolderErrorAction;
+  | CreateFolderErrorAction
+  | UpdateTreeAction
+  | UpdateUsedNotebooksAction;

@@ -1,7 +1,12 @@
 import path from 'path';
 import fs from 'fs/promises';
 import express from 'express';
-import directoryTree from 'directory-tree';
+import directoryTree, {
+  DirectoryTree,
+  DirectoryTreeCallback,
+} from 'directory-tree';
+
+import { createHash } from 'crypto';
 
 export const createTreesRouter = (root: string) => {
   const router = express.Router();
@@ -37,6 +42,30 @@ export const createTreesRouter = (root: string) => {
       console.log(err);
       throw err;
     }
+  });
+
+  router.post('/test', async (req, res) => {
+    // 'D:\\Programming\\projects\\Notebooks\\tester.txt',
+
+    const callback: DirectoryTreeCallback = (
+      item: DirectoryTree & { id?: string },
+      path: string
+    ) => {
+      item.id = createHash('sha1').update(path).digest('base64');
+    };
+
+    const tree: DirectoryTree & { id?: string } = directoryTree(
+      root,
+      {
+        extensions: /\.js$/,
+        depth: 1,
+        attributes: ['type', 'mtime'],
+      },
+      callback,
+      callback
+    );
+
+    res.send(tree);
   });
 
   return router;

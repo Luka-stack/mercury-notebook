@@ -2,25 +2,28 @@ import './TreeHub.css';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useEffect, useState } from 'react';
-import { useActions } from '../../hooks/use-actions';
+import { useState } from 'react';
 import { useTypedSelector } from '../../hooks/use-typed-selector';
 import { Tree } from '../../state';
+import { findTree } from '../../utils';
+import { PartialTree } from '../../layouts/HubLayout';
 
 dayjs.extend(relativeTime);
 
-const TreeHub = () => {
+interface TreeHubProps {
+  breadcrumb: PartialTree[];
+  setBreadcrumb: (trees: PartialTree[]) => void;
+}
+
+const TreeHub: React.FC<TreeHubProps> = ({ breadcrumb, setBreadcrumb }) => {
   const [currDir, setCurrDir] = useState<string>('');
+  const [showType, setShowType] = useState<string>('All');
   const [sortingOrder, setSortingOrder] = useState<[boolean, boolean]>([
     true,
     true,
   ]);
 
-  const { error, loading, tree, root } = useTypedSelector(
-    (state) => state.trees
-  );
-
-  const { fetchPartialTree } = useActions();
+  const { tree, loading } = useTypedSelector((state) => state.trees);
 
   const onSortClick = (name: boolean) => {
     setSortingOrder([name, !sortingOrder[1]]);
@@ -28,26 +31,35 @@ const TreeHub = () => {
 
   const onTreeElementClick = (tree: Tree) => {
     if (tree.type === 'directory') {
-      fetchPartialTree(tree.path.replace(root, '\\'));
-      setCurrDir(tree.path.replace(root + '\\', ''));
+      setCurrDir(tree.id);
+
+      if (breadcrumb) {
+        setBreadcrumb([...breadcrumb, tree]);
+      } else {
+        setBreadcrumb([tree]);
+      }
     } else {
-      window.open(`/notebooks/${tree.path.replace(root + '\\', '')}`);
+      let crumbPath = '';
+      if (breadcrumb.length) {
+        crumbPath = breadcrumb.map((c) => c.name).join('/');
+      }
+      window.open(`/notebooks${crumbPath}/${tree.name}`);
     }
   };
 
-  const onBreadcrumbClick = (path: string) => {
-    fetchPartialTree(path);
-    setCurrDir(path);
+  const onBreadcrumbClick = (part: PartialTree, id: number) => {
+    setCurrDir(part.id);
+    setBreadcrumb(breadcrumb!.slice(0, id + 1));
   };
 
-  useEffect(() => {
-    fetchPartialTree('');
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const rootDirClicked = () => {
+    setCurrDir('');
+    setBreadcrumb([]);
+  };
 
   const renderFiles = () => {
-    if (tree === null || !tree.children.length) {
+    let workingTree = findTree(tree, currDir);
+    if (!workingTree) {
       return (
         <tr>
           <td colSpan={4}>Folder is empty</td>
@@ -55,57 +67,91 @@ const TreeHub = () => {
       );
     }
 
-    let sorted: Tree[] = tree.children.slice();
+    const tmp = workingTree.children.slice();
+
     if (sortingOrder[0]) {
-      sorted.sort((a, b) => a.name.localeCompare(b.name));
+      tmp.sort((a, b) => a.name.localeCompare(b.name));
     } else {
-      sorted.sort((a, b) => +new Date(a.mtime) - +new Date(b.mtime));
+      tmp.sort((a, b) => +new Date(a.mtime) - +new Date(b.mtime));
     }
 
     if (!sortingOrder[1]) {
-      sorted.sort((a, b) => a.name.localeCompare(b.name)).reverse();
+      tmp.sort((a, b) => a.name.localeCompare(b.name)).reverse();
     }
 
-    return sorted.map((child) => (
-      <tr>
-        <td style={{ width: '0px' }}>
-          <i
-            className={`fa ${
-              child.type === 'file' ? 'fa-book italic' : 'fa-folder'
-            }`}
-          ></i>
-        </td>
-        <td colSpan={2}>
-          <span className="link" onClick={() => onTreeElementClick(child)}>
-            {child.name}
-          </span>
-        </td>
-        <td style={{ textAlign: 'center' }}>{dayjs(child.mtime).fromNow()}</td>
-      </tr>
-    ));
+    let classes;
+
+    return tmp.map((child) => {
+      classes = 'fa fa-folder';
+      if (child.type === 'file') {
+        classes = 'fa fa-book italic';
+
+        if (child.active) {
+          if (showType === 'Inactive') {
+            return null;
+          }
+          classes += ' used';
+        } else if (showType === 'Active') {
+          return null;
+        }
+      }
+
+      return (
+        <tr key={child.id}>
+          <td style={{ width: '0px' }}>
+            <i className={classes}></i>
+          </td>
+          <td colSpan={2}>
+            <span className="link" onClick={() => onTreeElementClick(child)}>
+              {child.name}
+            </span>
+          </td>
+          <td style={{ textAlign: 'center' }}>
+            {dayjs(child.mtime).fromNow()}
+          </td>
+        </tr>
+      );
+    });
   };
 
   const renderBreadcrumb = () => {
-    const paths = currDir.split('\\');
-    const crumb = [{ name: paths[0], path: paths[0] }];
+    if (!breadcrumb || !breadcrumb.length) return <li></li>;
 
-    for (let i = 1; i < paths.length; ++i) {
-      crumb.push({
-        name: paths[i],
-        path: crumb[i - 1].path + '\\' + paths[i],
-      });
-    }
-
-    return crumb.map((c) => (
+    return breadcrumb.map((c, id) => (
       <li>
-        <a onClick={() => onBreadcrumbClick(c.path)}>{c.name}</a>
+        <u onClick={() => onBreadcrumbClick(c, id)}>{c.name}</u>
       </li>
     ));
   };
 
   const renderNameBadge = (
     <th style={{ textAlign: 'right', cursor: 'pointer' }}>
-      <span className="tag is-dark" onClick={() => onSortClick(true)}>
+      <div className="cst-dropdown">
+        <span className="tag is-dark dobule-badge-left">Show :</span>
+        <span className="tag double-badge-right">{showType}</span>
+        <div className="cst-dropdown-content">
+          <em className="cst-dropdown-item" onClick={() => setShowType('All')}>
+            All
+          </em>
+          <em
+            className="cst-dropdown-item"
+            onClick={() => setShowType('Active')}
+          >
+            Active
+          </em>
+          <em
+            className="cst-dropdown-item"
+            onClick={() => setShowType('Inactive')}
+          >
+            Inactive
+          </em>
+        </div>
+      </div>
+      <span
+        className="tag is-dark"
+        style={{ marginLeft: '16px' }}
+        onClick={() => onSortClick(true)}
+      >
         Name
         {sortingOrder[0] && (
           <i
@@ -160,7 +206,7 @@ const TreeHub = () => {
                       <i
                         className="fa fa-folder"
                         style={{ color: '#1abc9c', cursor: 'pointer' }}
-                        onClick={() => onBreadcrumbClick('')}
+                        onClick={rootDirClicked}
                       />
                     </span>
                   </li>
@@ -172,6 +218,7 @@ const TreeHub = () => {
             {renderDateBadge}
           </tr>
         </thead>
+
         <tbody>{renderFiles()}</tbody>
       </table>
     </div>

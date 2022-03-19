@@ -41,7 +41,72 @@
   color: #3298dc;
 }
 
-.tree .breadcrumb ul li:last-child a {
+.tree .used {
+  color: #f1b70e;
+}
+
+.tree .breadcrumb ul li u {
+  align-items: center;
+  color: #1abc9c;
+  padding: 0 0.75em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.tree .breadcrumb ul li:last-child u {
   color: #fff;
   pointer-events: none;
+}
+
+.tag.dobule-badge-left {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.tag.double-badge-right {
+  background-color: #1f2424;
+}
+
+.cst-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.cst-dropdown-content {
+  display: none;
+  width: 100%;
+  position: absolute;
+  background-color: #282f2f;
+  border-radius: 0.4em;
+  box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+    0 0 0 1px rgb(10 10 10 / 2%);
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.cst-dropdown:hover .cst-dropdown-content {
+  display: block;
+}
+
+.cst-dropdown-item {
+  text-align: left;
+  white-space: nowrap;
+  width: 100%;
+  color: #fff;
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  position: relative;
+  cursor: pointer;
+  font-style: normal;
+  text-decoration: none;
+  font-weight: normal;
+  transition: all 200ms ease;
+  padding: 0.2em 0.5em;
+}
+
+.cst-dropdown-item:hover {
+  background-color: #1abc9c;
+  color: #fff;
 }

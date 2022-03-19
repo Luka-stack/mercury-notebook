@@ -7,8 +7,6 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ width, children }) => {
-  console.log(children);
-
   return (
     <div style={{ backgroundColor: '#375a7f' }}>
       <div className="cst-navbar container">

@@ -1,16 +1,33 @@
 import './TreeControls.css';
 
-import { useActions } from '../../hooks/use-actions';
+import { PartialTree } from '../../layouts/HubLayout';
+import socket from '../../socket-connection';
 
-const TreeControls = () => {
-  const { createNotebook, createFolder } = useActions();
+interface TreeControlsProps {
+  breadcrumb: PartialTree[];
+}
 
+const TreeControls: React.FC<TreeControlsProps> = ({ breadcrumb }) => {
   const onNewNotebookClick = () => {
-    createNotebook();
+    let crumbPath = '';
+    if (breadcrumb.length) {
+      crumbPath = breadcrumb.map((c) => c.name).join('/');
+    }
+
+    socket.emit('createNotebook', {
+      crumbPath,
+    });
   };
 
   const onNewFolderClick = () => {
-    createFolder();
+    let crumbPath = '';
+    if (breadcrumb.length) {
+      crumbPath = breadcrumb.map((c) => c.name).join('/');
+    }
+
+    socket.emit('createFolder', {
+      crumbPath,
+    });
   };
 
   return (

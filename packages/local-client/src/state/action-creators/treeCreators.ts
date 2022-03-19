@@ -43,3 +43,19 @@ export const createFolder = () => {
     }
   };
 };
+
+export const updateTree = (tree: Tree | null): Actions.UpdateTreeAction => {
+  return {
+    type: ActionType.UPDATE_TREE,
+    payload: tree,
+  };
+};
+
+export const updateUsedNotebooks = (
+  used: Set<string>
+): Actions.UpdateUsedNotebooksAction => {
+  return {
+    type: ActionType.UPDATE_USED_NOTEBOOKS,
+    payload: used,
+  };
+};
