@@ -16,6 +16,7 @@ interface CodeCellProps {
 
 const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   const { updateCell, createBundle } = useActions();
+  const autoCompile = useTypedSelector((state) => state.cells.autoCompile);
   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
   const cumulativeCode = useCumulativeCode(cell.id);
 
@@ -25,12 +26,17 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
       return;
     }
 
-    const timer = setTimeout(async () => {
-      createBundle(cell.id, cumulativeCode);
-    }, 1000);
+    let timer: NodeJS.Timeout;
+    if (autoCompile) {
+      timer = setTimeout(async () => {
+        createBundle(cell.id, cumulativeCode);
+      }, 1000);
+    }
 
     return () => {
-      clearTimeout(timer);
+      if (timer) {
+        clearTimeout(timer);
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cell.id, cumulativeCode, createBundle]);

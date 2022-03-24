@@ -4,7 +4,10 @@ import { ActionType } from '../action-types';
 import { Action } from '../actions/treeActions';
 import * as Actions from '../actions/treeActions';
 import { Tree } from '../tree';
-import { v4 as uuidv4 } from 'uuid';
+import socket from '../../socket-connection';
+import { constructNotebookPath, createNotebookPayload } from '../../utils';
+import { RootState } from '../reducers';
+import { Cell } from '../cell';
 
 export const fetchPartialTree = (filepath: string) => {
   return async (dispatch: Dispatch<Action>) => {
@@ -28,18 +31,66 @@ export const fetchPartialTree = (filepath: string) => {
   };
 };
 
-export const createFolder = () => {
-  return async (dispatch: Dispatch<Action>) => {
-    dispatch({ type: ActionType.CREATE_FOLDER });
+export const createFolder = (path: string) => {
+  return (dispatch: Dispatch<Action>) => {
+    socket.emit('createFolder', { path }, (response: { error: string }) => {
+      if (response.error) {
+        dispatch({
+          type: ActionType.CREATE_FOLDER_ERROR,
+          payload: response.error,
+        });
+      } else {
+        dispatch({ type: ActionType.CREATE_FOLDER });
+      }
+    });
+  };
+};
+
+export const createNotebook = (path: string, redirect = false) => {
+  return (dispatch: Dispatch<Action>) => {
+    socket.emit(
+      'createNotebook',
+      { path },
+      (response: { error?: string; filename?: string }) => {
+        if (response.error) {
+          dispatch({
+            type: ActionType.CREATE_NOTEBOOK_ERROR,
+            payload: response.error,
+          });
+        } else {
+          dispatch({
+            type: ActionType.CREATE_NOTEBOOK,
+          });
+
+          if (redirect) {
+            window.open(constructNotebookPath(path, response.filename!));
+          }
+        }
+      }
+    );
+  };
+};
+
+export const saveNotebookAs = (path: string) => {
+  return (dispatch: Dispatch<Action>, getState: () => RootState) => {
+    const {
+      cells: { order, chapters, data },
+    } = getState();
 
     try {
-      const dirpath = `Folder-${uuidv4().substring(0, 8)}`;
-
-      await axios.post('http://localhost:4005/trees/folder', {
-        dirpath,
-      });
-    } catch (err: any) {
-      dispatch({ type: ActionType.CREATE_FOLDER_ERROR, payload: err.message });
+      const payload = createNotebookPayload(order, chapters, data);
+      socket.emit(
+        'saveNotebookAs',
+        {
+          path,
+          data: payload,
+        },
+        (response: { error: string }) => {
+          console.log(response);
+        }
+      );
+    } catch (error: unknown) {
+      console.log('Error while saving Notebook');
     }
   };
 };

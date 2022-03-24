@@ -42,6 +42,10 @@
   position: relative;
 }
 
+.cst-navbar-item.active {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 .cst-navbar-item.cst-has-dropdown {
   align-items: stretch;
   padding: 0;

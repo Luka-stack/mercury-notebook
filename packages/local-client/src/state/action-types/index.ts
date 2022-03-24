@@ -17,7 +17,7 @@ export enum ActionType {
 
   SAVE_CELLS_ERROR = 'save_cells_error',
 
-  CREATE_NOTEBOOK_COMPLETE = 'create_notebook_complete',
+  CREATE_NOTEBOOK = 'create_notebook',
   CREATE_NOTEBOOK_ERROR = 'create_notebook_error',
 
   FETCH_PARTIAL_TREE = 'fetch_partial_tree',
@@ -28,7 +28,9 @@ export enum ActionType {
   CREATE_FOLDER = 'create_folder',
   CREATE_FOLDER_ERROR = 'create_folder_error',
 
-  // ---------------------------------------------------------
+  TOGGLE_AUTO_SAVE = 'toggle_auto_save',
+  TOGGLE_AUTO_COMPILE = 'toggle_auto_compile',
+
   UPDATE_TREE = 'update_tree',
   UPDATE_USED_NOTEBOOKS = 'update_used_notebooks',
 }

@@ -5,7 +5,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useState } from 'react';
 import { useTypedSelector } from '../../hooks/use-typed-selector';
 import { Tree } from '../../state';
-import { findTree } from '../../utils';
+import { constructNotebookPath, findTree } from '../../utils';
 import { PartialTree } from '../../layouts/HubLayout';
 
 dayjs.extend(relativeTime);
@@ -43,7 +43,8 @@ const TreeHub: React.FC<TreeHubProps> = ({ breadcrumb, setBreadcrumb }) => {
       if (breadcrumb.length) {
         crumbPath = breadcrumb.map((c) => c.name).join('/');
       }
-      window.open(`/notebooks${crumbPath}/${tree.name}`);
+
+      window.open(constructNotebookPath(crumbPath, tree.name));
     }
   };
 
@@ -118,7 +119,7 @@ const TreeHub: React.FC<TreeHubProps> = ({ breadcrumb, setBreadcrumb }) => {
     if (!breadcrumb || !breadcrumb.length) return <li></li>;
 
     return breadcrumb.map((c, id) => (
-      <li>
+      <li key={id}>
         <u onClick={() => onBreadcrumbClick(c, id)}>{c.name}</u>
       </li>
     ));

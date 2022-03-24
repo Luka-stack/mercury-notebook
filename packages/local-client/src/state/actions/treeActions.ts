@@ -38,6 +38,15 @@ export interface UpdateUsedNotebooksAction {
   payload: Set<string>;
 }
 
+export interface CreateNotebookAction {
+  type: ActionType.CREATE_NOTEBOOK;
+}
+
+export interface CreateNotebookErrorAction {
+  type: ActionType.CREATE_NOTEBOOK_ERROR;
+  payload: string;
+}
+
 export type Action =
   | FetchPartialTreeAction
   | FetchWholeTreeAction
@@ -46,4 +55,6 @@ export type Action =
   | CreateFolderAction
   | CreateFolderErrorAction
   | UpdateTreeAction
-  | UpdateUsedNotebooksAction;
+  | UpdateUsedNotebooksAction
+  | CreateNotebookAction
+  | CreateNotebookErrorAction;

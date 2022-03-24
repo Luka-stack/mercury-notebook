@@ -10,6 +10,8 @@ interface CellsState {
   order: string[];
   chapters: { [key: string]: Chapter };
   data: { [key: string]: Cell };
+  autoCompile: boolean;
+  autoSave: boolean;
 }
 
 const initialState: CellsState = {
@@ -18,6 +20,8 @@ const initialState: CellsState = {
   order: [],
   chapters: {},
   data: {},
+  autoCompile: true,
+  autoSave: true,
 };
 
 const reducer = produce(
@@ -168,9 +172,12 @@ const reducer = produce(
 
         return state;
 
-      case ActionType.CREATE_NOTEBOOK_ERROR:
-        console.log(action.payload);
+      case ActionType.TOGGLE_AUTO_COMPILE:
+        state.autoCompile = !state.autoCompile;
+        return state;
 
+      case ActionType.TOGGLE_AUTO_SAVE:
+        state.autoSave = !state.autoSave;
         return state;
 
       default:

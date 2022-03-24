@@ -5,9 +5,23 @@ import directoryTree, {
 } from 'directory-tree';
 import path from 'path';
 import fs from 'fs/promises';
+import { existsSync } from 'fs';
 import { createHash } from 'crypto';
 import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
+
+interface Cell {
+  id: string;
+  chapterId: string;
+  content: string;
+  type: 'text' | 'code';
+}
+
+interface Chapter {
+  id: string;
+  description: Cell;
+  content: string[];
+}
 
 export class TreeFile {
   private openFiles: Map<string, string>;
@@ -84,18 +98,56 @@ export class TreeFile {
     }
   }
 
-  async createNotebook(dirpath: string): Promise<void> {
+  async createNotebook(dirpath: string): Promise<string> {
     try {
-      const notebookName = `MrNote-${uuidv4().substring(0, 8)}`;
-      const fullPath = path.join(this.root, dirpath, notebookName);
+      const filename = `MrNote-${uuidv4().substring(0, 8)}.js`;
+      const fullPath = path.join(this.root, dirpath, filename);
 
       await fs.writeFile(fullPath, JSON.stringify(defaultContent), 'utf-8');
+
       this.socket.emit('tree', {
         ...this.scan(),
       });
+
+      return filename;
     } catch (err: any) {
-      // emit error
-      console.log(err);
+      console.error(err); // log error
+      throw err;
+    }
+  }
+
+  async saveNotebookAs(
+    dirpath: string,
+    content: { chapters: Chapter[]; cells: Cell[] }
+  ): Promise<void> {
+    try {
+      const fullPath = path.join(this.root, dirpath);
+
+      if (existsSync(fullPath)) {
+        throw 'File already exists';
+      }
+
+      await fs.writeFile(fullPath, JSON.stringify(content), 'utf-8');
+      this.socket.emit('tree', {
+        ...this.scan(),
+      });
+    } catch (err: unknown) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  async saveNotebook(
+    dirpath: string,
+    content: { chapters: Chapter[]; cells: Cell[] }
+  ): Promise<void> {
+    try {
+      const fullPath = path.join(this.root, dirpath);
+
+      await fs.writeFile(fullPath, JSON.stringify(content), 'utf-8');
+    } catch (err: any) {
+      console.error(err);
+      throw err;
     }
   }
 

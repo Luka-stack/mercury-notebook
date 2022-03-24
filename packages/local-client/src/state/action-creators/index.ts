@@ -11,12 +11,15 @@ import {
   InsertChapterAfterAction,
   DeleteChapterAction,
   MoveChapterAction,
+  ToggleAutoCompileAction,
+  ToggleAutoSaveAction,
 } from '../actions';
 import { Cell, CellTypes } from '../cell';
 import { Chapter } from '../chapter';
 import bundle from '../../bundler';
 import { RootState } from '../reducers';
-import { v4 as uuidv4 } from 'uuid';
+import socket from '../../socket-connection';
+import { createNotebookPayload } from '../../utils';
 
 export const updateCell = (
   id: string,
@@ -128,6 +131,18 @@ export const createBundle = (cellId: string, input: string) => {
   };
 };
 
+export const toggleAutoCompile = (): ToggleAutoCompileAction => {
+  return {
+    type: ActionType.TOGGLE_AUTO_COMPILE,
+  };
+};
+
+export const toggleAutoSave = (): ToggleAutoSaveAction => {
+  return {
+    type: ActionType.TOGGLE_AUTO_SAVE,
+  };
+};
+
 export const fetchCells = () => {
   return async (dispatch: Dispatch<Action>) => {
     dispatch({ type: ActionType.FETCH_CELLS });
@@ -147,26 +162,6 @@ export const fetchCells = () => {
     } catch (err: any) {
       dispatch({ type: ActionType.FETCH_CELLS_ERROR, payload: err.message });
       // window.open(`${window.location.origin}/404`, '_self');
-    }
-  };
-};
-
-export const createNotebook = () => {
-  return async (dispatch: Dispatch<Action>) => {
-    try {
-      const filepath = `MrNote-${uuidv4().substring(0, 8)}.js`;
-
-      await axios.post('http://localhost:4005/notebooks/create', {
-        filepath,
-      });
-
-      dispatch({ type: ActionType.CREATE_NOTEBOOK_COMPLETE });
-      // window.open(`/notebooks/${filepath}`);
-    } catch (err: any) {
-      dispatch({
-        type: ActionType.CREATE_NOTEBOOK_ERROR,
-        payload: err.message,
-      });
     }
   };
 };
@@ -197,6 +192,38 @@ export const saveCells = () => {
       });
     } catch (err: any) {
       dispatch({ type: ActionType.SAVE_CELLS_ERROR, payload: err.message });
+    }
+  };
+};
+
+export const saveNotebook = (path: string) => {
+  return (dispatch: Dispatch<Action>, getState: () => RootState) => {
+    const {
+      cells: { order, chapters, data },
+    } = getState();
+
+    try {
+      const payload = createNotebookPayload(order, chapters, data);
+
+      socket.emit(
+        'saveNotebook',
+        {
+          path,
+          data: payload,
+        },
+        (response: { error: string }) => {
+          if (response.error) {
+            dispatch({
+              type: ActionType.SAVE_CELLS_ERROR,
+              payload: response.error,
+            });
+          } else {
+            console.log('Saved Successfully');
+          }
+        }
+      );
+    } catch (error: unknown) {
+      console.log('Error while saving Notebook');
     }
   };
 };

@@ -1,22 +1,21 @@
 import './TreeControls.css';
 
 import { PartialTree } from '../../layouts/HubLayout';
-import socket from '../../socket-connection';
+import { useActions } from '../../hooks/use-actions';
 
 interface TreeControlsProps {
   breadcrumb: PartialTree[];
 }
 
 const TreeControls: React.FC<TreeControlsProps> = ({ breadcrumb }) => {
+  const { createFolder, createNotebook } = useActions();
+
   const onNewNotebookClick = () => {
     let crumbPath = '';
     if (breadcrumb.length) {
       crumbPath = breadcrumb.map((c) => c.name).join('/');
     }
-
-    socket.emit('createNotebook', {
-      crumbPath,
-    });
+    createNotebook(crumbPath);
   };
 
   const onNewFolderClick = () => {
@@ -25,9 +24,7 @@ const TreeControls: React.FC<TreeControlsProps> = ({ breadcrumb }) => {
       crumbPath = breadcrumb.map((c) => c.name).join('/');
     }
 
-    socket.emit('createFolder', {
-      crumbPath,
-    });
+    createFolder(crumbPath);
   };
 
   return (

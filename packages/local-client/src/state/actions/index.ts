@@ -97,13 +97,12 @@ export interface SaveCellsErrorAction {
   payload: string;
 }
 
-export interface CreateNotebookCompleteAction {
-  type: ActionType.CREATE_NOTEBOOK_COMPLETE;
+export interface ToggleAutoCompileAction {
+  type: ActionType.TOGGLE_AUTO_COMPILE;
 }
 
-export interface CreateNotebookErrorAction {
-  type: ActionType.CREATE_NOTEBOOK_ERROR;
-  payload: string;
+export interface ToggleAutoSaveAction {
+  type: ActionType.TOGGLE_AUTO_SAVE;
 }
 
 export type Action =
@@ -120,5 +119,5 @@ export type Action =
   | FetchCellsCompleteAction
   | FetchCellsErrorAction
   | SaveCellsErrorAction
-  | CreateNotebookCompleteAction
-  | CreateNotebookErrorAction;
+  | ToggleAutoSaveAction
+  | ToggleAutoCompileAction;

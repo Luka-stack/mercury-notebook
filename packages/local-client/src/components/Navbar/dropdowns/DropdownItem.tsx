@@ -1,12 +1,21 @@
 interface NavbarItemProps {
   label: string;
   desc?: string;
+  active?: boolean;
   onClick: () => void;
 }
 
-const DropdownItem: React.FC<NavbarItemProps> = ({ label, desc, onClick }) => {
+const DropdownItem: React.FC<NavbarItemProps> = ({
+  label,
+  desc,
+  active = false,
+  onClick,
+}) => {
   return (
-    <b className="cst-navbar-item" onClick={onClick}>
+    <b
+      className={`cst-navbar-item ${active ? 'active' : ''} `}
+      onClick={onClick}
+    >
       <div className="cst-navbar-content">
         <p>
           <strong>{label}</strong>

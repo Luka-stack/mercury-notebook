@@ -65,8 +65,31 @@ io.on('connection', (socket) => {
     treeStore.createFolder(crumbPath);
   });
 
-  socket.on('createNotebook', ({ crumbPath }) => {
-    treeStore.createNotebook(crumbPath);
+  socket.on('createNotebook', async (payload, cb) => {
+    try {
+      const filename = await treeStore.createNotebook(payload.path);
+      cb({ filename });
+    } catch (err: any) {
+      cb({ error: err.message });
+    }
+  });
+
+  socket.on('saveNotebookAs', async (payload, cb) => {
+    try {
+      await treeStore.saveNotebookAs(payload.path, payload.data);
+      cb({ error: null });
+    } catch (err: any) {
+      cb({ error: err });
+    }
+  });
+
+  socket.on('saveNotebook', async (payload, cb) => {
+    try {
+      await treeStore.saveNotebook(payload.path, payload.data);
+      cb({ error: null });
+    } catch (err: any) {
+      cb({ error: err });
+    }
   });
 
   socket.on('disconnect', () => {
