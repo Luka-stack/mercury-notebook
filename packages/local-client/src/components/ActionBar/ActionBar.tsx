@@ -31,16 +31,13 @@ const ActionBar: React.FC<ActionBarProps> = ({
 
   return (
     <div className="action-bar">
-      <button
-        className="button is-primary is-small"
-        onClick={() => setIsOpen(!isOpen)}
-      >
+      <button className="button is-small" onClick={() => setIsOpen(!isOpen)}>
         <span className="icon">
           <i className={`fas ${isOpen ? 'fa-minus' : 'fa-plus'}`}></i>
         </span>
       </button>
       <button
-        className="button is-primary is-small"
+        className="button is-small"
         onClick={(e) => onMoveCell(e, cellId, 'up', chapterId)}
       >
         <span className="icon">
@@ -48,7 +45,7 @@ const ActionBar: React.FC<ActionBarProps> = ({
         </span>
       </button>
       <button
-        className="button is-primary is-small"
+        className="button is-small"
         onClick={(e) => onMoveCell(e, cellId, 'down', chapterId)}
       >
         <span className="icon">
@@ -56,7 +53,7 @@ const ActionBar: React.FC<ActionBarProps> = ({
         </span>
       </button>
       <button
-        className="button is-primary is-small close-button"
+        className="button is-small close-button"
         onClick={() => deleteCell(cellId, chapterId)}
       >
         <span className="icon">

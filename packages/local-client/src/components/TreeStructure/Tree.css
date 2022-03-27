@@ -1,0 +1,32 @@
+.tree span {
+  color: #1abc9c;
+}
+
+.tree {
+  cursor: pointer;
+}
+
+.tree i.used {
+  color: #f1b70e;
+}
+
+.tree div {
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tree div.active {
+  background-color: #1abc9c;
+}
+
+.tree div.active span {
+  color: white;
+}
+
+.tree div:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.tree div:hover span {
+  color: white;
+}

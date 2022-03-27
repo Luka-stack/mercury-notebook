@@ -137,6 +137,36 @@ export class TreeFile {
     }
   }
 
+  async renameFile(oldPath: string, newPath: string): Promise<void> {
+    try {
+      if (existsSync(newPath)) {
+        throw 'File already exists';
+      }
+
+      await fs.rename(oldPath, newPath);
+      this.socket.emit('tree', {
+        ...this.scan(),
+      });
+    } catch (err: unknown) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  async deleteFiles(treeFile: { path: string }[]): Promise<void> {
+    try {
+      for (let tree of treeFile) {
+        await fs.rm(tree.path);
+      }
+      this.socket.emit('tree', {
+        ...this.scan(),
+      });
+    } catch (err: unknown) {
+      console.error(err);
+      throw err;
+    }
+  }
+
   async saveNotebook(
     dirpath: string,
     content: { chapters: Chapter[]; cells: Cell[] }

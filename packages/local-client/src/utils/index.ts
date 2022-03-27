@@ -1,12 +1,12 @@
-import { Cell, Tree } from '../state';
+import { Cell, FileTree } from '../state';
 import { Chapter } from '../state/chapter';
 
 const ROOT_TAB_NOTEBOOK = 'notebooks';
 
 export const findTree = (
-  tree: Tree | null,
+  tree: FileTree | null,
   lookingFor: string
-): Tree | null => {
+): FileTree | null => {
   if (!tree) {
     return null;
   }
@@ -44,7 +44,7 @@ export const createNotebookPayload = (
   order: string[],
   chapters: any,
   data: any
-): { ordChapters: Chapter[]; ordCells: Cell[] } => {
+): { chapters: Chapter[]; cells: Cell[] } => {
   try {
     const ordChapters = order.map((id) => chapters[id]);
     const ordCells: Cell[] = [];
@@ -53,8 +53,59 @@ export const createNotebookPayload = (
       chapter.content.forEach((id: any) => ordCells.push(data[id]));
     });
 
-    return { ordChapters, ordCells };
+    return { chapters: ordChapters, cells: ordCells };
   } catch (err) {
     throw Error('Bad data passed');
   }
+};
+
+export const createCumulativeCode = (
+  cellId: string,
+  order: string[],
+  chapters: any,
+  data: any
+) => {
+  const orderedCells: Cell[] = [];
+
+  order.forEach((sectionId) => {
+    orderedCells.push(
+      ...chapters[sectionId].content.map((id: any) => data[id])
+    );
+  });
+
+  const showFunc = `
+      import _React from 'react';
+      import _ReactDOM from 'react-dom';
+      var show = (value) => {
+        const root = document.querySelector('#root');
+        if (typeof value === 'object') {
+          if (value.$$typeof && value.props) {
+            _ReactDOM.render(value, root);
+          } else {
+            root.innerHTML = JSON.stringify(value);
+          }
+        } else {
+          root.innerHTML = value;
+        }
+      };
+    `;
+  const showFuncNoop = 'var show = () => {}';
+  const cumulativeCode = [];
+
+  for (let c of orderedCells) {
+    if (c.type === 'code') {
+      if (c.id === cellId) {
+        cumulativeCode.push(showFunc);
+      } else {
+        cumulativeCode.push(showFuncNoop);
+      }
+      cumulativeCode.push(c.content);
+    }
+
+    if (c.id === cellId) {
+      break;
+    }
+  }
+
+  return cumulativeCode.join('\n');
 };

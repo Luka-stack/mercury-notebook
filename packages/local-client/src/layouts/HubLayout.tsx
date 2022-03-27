@@ -4,6 +4,7 @@ import TreeHub from '../components/Hub/TreeHub';
 import Navbar from '../components/Navbar/Navbar';
 import { useActions } from '../hooks/use-actions';
 import socket from '../socket-connection';
+import { FileTree } from '../state';
 
 export interface PartialTree {
   id: string;
@@ -12,6 +13,7 @@ export interface PartialTree {
 }
 
 const HubLayout = () => {
+  const [selectedFiles, setSelectedFiles] = useState<FileTree[]>([]);
   const [dirBreadcrumb, setDirBreadcrumb] = useState<PartialTree[]>([]);
 
   const { updateTree } = useActions();
@@ -39,8 +41,17 @@ const HubLayout = () => {
   return (
     <>
       <Navbar width="90%" />
-      <TreeControls breadcrumb={dirBreadcrumb} />
-      <TreeHub breadcrumb={dirBreadcrumb} setBreadcrumb={setDirBreadcrumb} />
+      <TreeControls
+        breadcrumb={dirBreadcrumb}
+        selectedFiles={selectedFiles}
+        setSelectedFiles={setSelectedFiles}
+      />
+      <TreeHub
+        breadcrumb={dirBreadcrumb}
+        setBreadcrumb={setDirBreadcrumb}
+        selectedFiles={selectedFiles}
+        setSelectedFiles={setSelectedFiles}
+      />
     </>
   );
 };

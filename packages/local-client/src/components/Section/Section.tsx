@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import ConfirmModal from '../Modals/ConfirmModal';
 import { useActions } from '../../hooks/use-actions';
 import { Direction } from '../../state/actions';
+import { useTypedSelector } from '../../hooks/use-typed-selector';
 
 interface SectionProps {
   id: string;
@@ -13,6 +14,10 @@ interface SectionProps {
 const Section: React.FC<SectionProps> = ({ id, description, children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);
+
+  const selectedSection = useTypedSelector(
+    (state) => state.cells.selectedCell?.chapterId
+  );
 
   const { deleteChapter, moveChapter } = useActions();
 
@@ -40,7 +45,7 @@ const Section: React.FC<SectionProps> = ({ id, description, children }) => {
   };
 
   return (
-    <div className="card">
+    <div className={`card ${selectedSection === id ? 'active-section' : ''}`}>
       <header className="card-header" onClick={() => setIsOpen(!isOpen)}>
         <button className="button section-button">
           <span className="icon">
@@ -78,7 +83,6 @@ const Section: React.FC<SectionProps> = ({ id, description, children }) => {
       </div>
 
       <ConfirmModal
-        title="Delete chapter"
         contnet="You are about to delete chapter with multiple cells."
         isShowing={showModal}
         setIsShowing={setShowModal}

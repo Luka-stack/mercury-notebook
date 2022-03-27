@@ -6,6 +6,8 @@ import { Cell } from '../../../state';
 import ActionBar from '../../ActionBar/ActionBar';
 import CodeCell from '../../CodeCell/CodeCell';
 import TextEditor from '../../TextEditor/TextEditor';
+import { useTypedSelector } from '../../../hooks/use-typed-selector';
+import { useActions } from '../../../hooks/use-actions';
 
 interface CellListItemProps {
   cell: Cell;
@@ -17,6 +19,12 @@ const CellListItem: React.FC<CellListItemProps> = ({
   showActions = true,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
+
+  const selectedCell = useTypedSelector((state) => state.cells.selectedCell);
+
+  const { selectCodeCell } = useActions();
+
+  const activeCellStyle = cell.id === selectedCell?.id ? 'active-cell' : '';
 
   const renderTextEditor = (
     <>
@@ -44,13 +52,13 @@ const CellListItem: React.FC<CellListItemProps> = ({
   );
 
   return (
-    <div className="cell-list-item">
+    <div
+      className={`cell-list-item ${activeCellStyle}`}
+      onClick={() => selectCodeCell(cell)}
+    >
       {cell.type === 'code' ? (
         <>
-          <div
-            className="action-bar-wrapper"
-            onClick={() => setIsOpen(!isOpen)}
-          >
+          <div className="action-bar-wrapper">
             {showActions && (
               <ActionBar
                 cellId={cell.id}

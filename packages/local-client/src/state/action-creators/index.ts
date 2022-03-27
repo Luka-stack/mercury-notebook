@@ -13,13 +13,14 @@ import {
   MoveChapterAction,
   ToggleAutoCompileAction,
   ToggleAutoSaveAction,
+  SelectCodeCellAction,
 } from '../actions';
 import { Cell, CellTypes } from '../cell';
 import { Chapter } from '../chapter';
 import bundle from '../../bundler';
 import { RootState } from '../reducers';
 import socket from '../../socket-connection';
-import { createNotebookPayload } from '../../utils';
+import { createCumulativeCode, createNotebookPayload } from '../../utils';
 
 export const updateCell = (
   id: string,
@@ -131,6 +132,39 @@ export const createBundle = (cellId: string, input: string) => {
   };
 };
 
+export const bundleSelectedCell = () => {
+  return async (dispatch: Dispatch<Action>, getState: () => RootState) => {
+    const { data, order, chapters, selectedCell } = getState().cells;
+
+    if (selectedCell && selectedCell.type === 'code') {
+      const cumulativeCode = createCumulativeCode(
+        selectedCell.id,
+        order,
+        chapters,
+        data
+      );
+      dispatch({
+        type: ActionType.BUNDLE_START,
+        payload: {
+          cellId: selectedCell.id,
+        },
+      });
+
+      const result = await bundle(cumulativeCode);
+      dispatch({
+        type: ActionType.BUNDLE_COMPLETE,
+        payload: {
+          cellId: selectedCell.id,
+          bundle: {
+            code: result.code,
+            err: result.err,
+          },
+        },
+      });
+    }
+  };
+};
+
 export const toggleAutoCompile = (): ToggleAutoCompileAction => {
   return {
     type: ActionType.TOGGLE_AUTO_COMPILE,
@@ -143,6 +177,14 @@ export const toggleAutoSave = (): ToggleAutoSaveAction => {
   };
 };
 
+export const selectCodeCell = (cell: Cell): SelectCodeCellAction => {
+  return {
+    type: ActionType.SELECT_CODE_CELL,
+    payload: cell,
+  };
+};
+
+// DELETE ??????????????????????
 export const fetchCells = () => {
   return async (dispatch: Dispatch<Action>) => {
     dispatch({ type: ActionType.FETCH_CELLS });

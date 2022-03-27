@@ -1,5 +1,5 @@
 import { ActionType } from '../action-types';
-import { Tree } from '../tree';
+import { FileTree } from '../tree';
 
 export interface FetchPartialTreeAction {
   type: ActionType.FETCH_PARTIAL_TREE;
@@ -11,7 +11,7 @@ export interface FetchWholeTreeAction {
 
 export interface FetchTreeCompleteAction {
   type: ActionType.FETCH_TREE_COMPLETE;
-  paylaod: Tree;
+  paylaod: FileTree;
 }
 
 export interface FetchTreeErrorAction {
@@ -30,7 +30,7 @@ export interface CreateFolderErrorAction {
 
 export interface UpdateTreeAction {
   type: ActionType.UPDATE_TREE;
-  payload: Tree | null;
+  payload: FileTree | null;
 }
 
 export interface UpdateUsedNotebooksAction {
@@ -47,6 +47,15 @@ export interface CreateNotebookErrorAction {
   payload: string;
 }
 
+export interface SelectModalFileAction {
+  type: ActionType.SELECT_MODAL_FILE;
+  payload: string;
+}
+
+export interface DeselectModalFileAction {
+  type: ActionType.DESELECT_MODAL_FILE;
+}
+
 export type Action =
   | FetchPartialTreeAction
   | FetchWholeTreeAction
@@ -57,4 +66,6 @@ export type Action =
   | UpdateTreeAction
   | UpdateUsedNotebooksAction
   | CreateNotebookAction
-  | CreateNotebookErrorAction;
+  | CreateNotebookErrorAction
+  | SelectModalFileAction
+  | DeselectModalFileAction;

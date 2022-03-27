@@ -1,5 +1,4 @@
 interface ConfirmModalProps {
-  title: string;
   contnet: string;
   confirmLabel?: string;
   cancelLabel?: string;
@@ -10,7 +9,6 @@ interface ConfirmModalProps {
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
-  title,
   contnet,
   confirmLabel = 'Proceed',
   cancelLabel = 'Cancel',
@@ -19,12 +17,11 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onConfirm,
 }) => {
   return (
-    <div className={`modal ${isShowing && 'is-active'}`} id="myModal">
+    <div className={`modal ${isShowing && 'is-active'}`}>
       <div className="modal-card">
         <header className="modal-card-head">
-          <p className="modal-card-title">{title}</p>
           <button
-            className="delete"
+            className="delete is-medium"
             onClick={() => setIsShowing(false)}
           ></button>
         </header>

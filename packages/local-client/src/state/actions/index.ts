@@ -105,6 +105,11 @@ export interface ToggleAutoSaveAction {
   type: ActionType.TOGGLE_AUTO_SAVE;
 }
 
+export interface SelectCodeCellAction {
+  type: ActionType.SELECT_CODE_CELL;
+  payload: Cell;
+}
+
 export type Action =
   | MoveChapterAction
   | MoveCellAction
@@ -120,4 +125,5 @@ export type Action =
   | FetchCellsErrorAction
   | SaveCellsErrorAction
   | ToggleAutoSaveAction
-  | ToggleAutoCompileAction;
+  | ToggleAutoCompileAction
+  | SelectCodeCellAction;

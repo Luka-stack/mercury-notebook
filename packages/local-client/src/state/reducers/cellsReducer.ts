@@ -12,6 +12,7 @@ interface CellsState {
   data: { [key: string]: Cell };
   autoCompile: boolean;
   autoSave: boolean;
+  selectedCell: Cell | null;
 }
 
 const initialState: CellsState = {
@@ -22,6 +23,7 @@ const initialState: CellsState = {
   data: {},
   autoCompile: true,
   autoSave: true,
+  selectedCell: null,
 };
 
 const reducer = produce(
@@ -178,6 +180,10 @@ const reducer = produce(
 
       case ActionType.TOGGLE_AUTO_SAVE:
         state.autoSave = !state.autoSave;
+        return state;
+
+      case ActionType.SELECT_CODE_CELL:
+        state.selectedCell = action.payload;
         return state;
 
       default:

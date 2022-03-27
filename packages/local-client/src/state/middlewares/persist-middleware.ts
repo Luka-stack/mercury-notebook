@@ -18,7 +18,7 @@ export const persistMiddleware = ({
       next(action);
 
       if (
-        getState().cells.autoCompile &&
+        getState().cells.autoSave &&
         [
           ActionType.MOVE_CELL,
           ActionType.UPDATE_CELL,

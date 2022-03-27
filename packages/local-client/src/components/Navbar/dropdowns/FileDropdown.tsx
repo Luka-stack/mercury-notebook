@@ -1,22 +1,14 @@
-import { ChangeEvent, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useActions } from '../../../hooks/use-actions';
+import FilePickerModal from '../../Modals/FilePickerModal';
+import NameInputModal from '../../Modals/NameInputModal';
 import DropdownItem from './DropdownItem';
 
 const FileDropdown = () => {
-  const fileRef = useRef<any>();
+  const [filePicker, setFilePicker] = useState<boolean>(false);
+  const [namePicker, setNamePicker] = useState<boolean>(false);
 
   const { createNotebook, saveNotebook, saveNotebookAs } = useActions();
-
-  const onExistingClick = () => {
-    const input: HTMLInputElement = fileRef.current;
-    input.click();
-  };
-
-  const onFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length === 1) {
-      window.open(`/notebooks/${event.target.files[0].name}`);
-    }
-  };
 
   const onNewClick = () => {
     const path = window.location.pathname.split('/').slice(2, -1).join('/');
@@ -28,39 +20,67 @@ const FileDropdown = () => {
     saveNotebook(path);
   };
 
-  const onSaveAsClick = () => {
+  const saveAs = (filename: string) => {
     const path =
-      window.location.pathname.split('/').slice(2, -1).join('/') +
-      '/XOXOXOX.js';
+      window.location.pathname.split('/').slice(2, -1).join('/') + filename;
     saveNotebookAs(path);
+    setNamePicker(false);
   };
 
-  return (
-    <div className="cst-navbar-item cst-has-dropdown cst-is-hoverable">
-      <b className="cst-navbar-link">File</b>
-      <div className="cst-navbar-dropdown">
-        <DropdownItem label="Save" onClick={onSaveClick} />
-        <DropdownItem label="Save as" onClick={onSaveAsClick} />
-        <DropdownItem
-          label="Open"
-          desc="Open notebook in new a tab"
-          onClick={onExistingClick}
-        />
-        <DropdownItem
-          label="New notebook"
-          desc="Open new notebook"
-          onClick={onNewClick}
-        />
-      </div>
+  useEffect(() => {
+    document.addEventListener('keydown', (event) => {
+      if (
+        event.key === 's' &&
+        (navigator.userAgent.match('Mac') ? event.metaKey : event.ctrlKey)
+      ) {
+        event.preventDefault();
+        onSaveClick();
+      } else if (
+        event.key === 'n' &&
+        (navigator.userAgent.match('Mac') ? event.metaKey : event.ctrlKey)
+      ) {
+        event.preventDefault();
+        onNewClick();
+      } else if (
+        event.key === 'o' &&
+        (navigator.userAgent.match('Mac') ? event.metaKey : event.ctrlKey)
+      ) {
+        event.preventDefault();
+        setFilePicker(true);
+      }
+    });
+  }, []);
 
-      <input
-        ref={fileRef}
-        type="file"
-        accept=".js"
-        style={{ display: 'none' }}
-        onChange={onFileSelect}
-      />
-    </div>
+  return (
+    <>
+      <div className="cst-navbar-item cst-has-dropdown cst-is-hoverable">
+        <b className="cst-navbar-link">File</b>
+        <div className="cst-navbar-dropdown">
+          <DropdownItem label="Save" onClick={onSaveClick} />
+          <DropdownItem label="Save as" onClick={() => setNamePicker(true)} />
+          <hr className="dropdown-divider" />
+          <DropdownItem
+            label="Open"
+            desc="Open notebook in new a tab"
+            onClick={() => setFilePicker(true)}
+          />
+          <DropdownItem
+            label="New"
+            desc="Open new notebook"
+            onClick={onNewClick}
+          />
+        </div>
+      </div>
+      <FilePickerModal isShowing={filePicker} setIsShowing={setFilePicker} />
+      {namePicker && (
+        <NameInputModal
+          type="file"
+          currName=""
+          onSuccess={saveAs}
+          onCancel={() => setNamePicker(false)}
+        />
+      )}
+    </>
   );
 };
 

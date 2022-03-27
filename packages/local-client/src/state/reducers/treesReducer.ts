@@ -1,22 +1,22 @@
 import produce from 'immer';
 import { ActionType } from '../action-types';
 import { Action } from '../actions/treeActions';
-import { Tree } from '../tree';
+import { FileTree } from '../tree';
 
 interface TreesState {
   root: { path: string; id: string };
-  usedNotebook: Set<string>;
   loading: boolean;
   error: string | null;
-  tree: Tree | null;
+  tree: FileTree | null;
+  modalFile: string;
 }
 
 const initialState: TreesState = {
   root: { path: '', id: '' },
-  usedNotebook: new Set(),
   loading: false,
   error: null,
   tree: null,
+  modalFile: '',
 };
 
 const reducer = produce(
@@ -61,9 +61,17 @@ const reducer = produce(
 
         return state;
 
-      case ActionType.UPDATE_USED_NOTEBOOKS:
-        state.usedNotebook = action.payload;
+      case ActionType.SELECT_MODAL_FILE:
+        state.modalFile = action.payload;
         return state;
+
+      case ActionType.DESELECT_MODAL_FILE:
+        state.modalFile = '';
+        return state;
+
+      // case ActionType.UPDATE_USED_NOTEBOOKS:
+      //   state.usedNotebook = action.payload;
+      //   return state;
 
       default:
         return state;

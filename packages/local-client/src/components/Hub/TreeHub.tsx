@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useState } from 'react';
 import { useTypedSelector } from '../../hooks/use-typed-selector';
-import { Tree } from '../../state';
+import { FileTree } from '../../state';
 import { constructNotebookPath, findTree } from '../../utils';
 import { PartialTree } from '../../layouts/HubLayout';
 
@@ -13,9 +13,16 @@ dayjs.extend(relativeTime);
 interface TreeHubProps {
   breadcrumb: PartialTree[];
   setBreadcrumb: (trees: PartialTree[]) => void;
+  selectedFiles: FileTree[];
+  setSelectedFiles: (trees: FileTree[]) => void;
 }
 
-const TreeHub: React.FC<TreeHubProps> = ({ breadcrumb, setBreadcrumb }) => {
+const TreeHub: React.FC<TreeHubProps> = ({
+  breadcrumb,
+  setBreadcrumb,
+  selectedFiles,
+  setSelectedFiles,
+}) => {
   const [currDir, setCurrDir] = useState<string>('');
   const [showType, setShowType] = useState<string>('All');
   const [sortingOrder, setSortingOrder] = useState<[boolean, boolean]>([
@@ -25,11 +32,22 @@ const TreeHub: React.FC<TreeHubProps> = ({ breadcrumb, setBreadcrumb }) => {
 
   const { tree, loading } = useTypedSelector((state) => state.trees);
 
+  const onCheckboxClick = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    tree: FileTree
+  ) => {
+    if (event.target.checked) {
+      setSelectedFiles([...selectedFiles, tree]);
+    } else {
+      setSelectedFiles(selectedFiles.filter((el) => el.id !== tree.id));
+    }
+  };
+
   const onSortClick = (name: boolean) => {
     setSortingOrder([name, !sortingOrder[1]]);
   };
 
-  const onTreeElementClick = (tree: Tree) => {
+  const onTreeElementClick = (tree: FileTree) => {
     if (tree.type === 'directory') {
       setCurrDir(tree.id);
 
@@ -100,9 +118,15 @@ const TreeHub: React.FC<TreeHubProps> = ({ breadcrumb, setBreadcrumb }) => {
       return (
         <tr key={child.id}>
           <td style={{ width: '0px' }}>
-            <i className={classes}></i>
+            <input
+              type="checkbox"
+              onChange={(e) => onCheckboxClick(e, child)}
+            />
           </td>
-          <td colSpan={2}>
+          <td style={{ width: '0px', paddingRight: '8px' }}>
+            <i className={classes} />
+          </td>
+          <td colSpan={2} style={{ paddingLeft: '0px' }}>
             <span className="link" onClick={() => onTreeElementClick(child)}>
               {child.name}
             </span>
@@ -195,11 +219,11 @@ const TreeHub: React.FC<TreeHubProps> = ({ breadcrumb, setBreadcrumb }) => {
   }
 
   return (
-    <div className="tree container">
-      <table className="tree table">
+    <div className="tree--hub container">
+      <table className="tree--hub table">
         <thead>
           <tr>
-            <th colSpan={2}>
+            <th colSpan={3}>
               <nav className="breadcrumb">
                 <ul>
                   <li>

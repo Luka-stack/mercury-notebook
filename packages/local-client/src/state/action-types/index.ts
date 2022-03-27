@@ -33,4 +33,9 @@ export enum ActionType {
 
   UPDATE_TREE = 'update_tree',
   UPDATE_USED_NOTEBOOKS = 'update_used_notebooks',
+
+  SELECT_MODAL_FILE = 'select_modal_file',
+  DESELECT_MODAL_FILE = 'deselect_modal_file',
+
+  SELECT_CODE_CELL = 'select_code_cell',
 }

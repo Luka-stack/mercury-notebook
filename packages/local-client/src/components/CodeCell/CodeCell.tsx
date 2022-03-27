@@ -20,6 +20,10 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
   const cumulativeCode = useCumulativeCode(cell.id);
 
+  const runBundle = () => {
+    createBundle(cell.id, cumulativeCode);
+  };
+
   useEffect(() => {
     if (!bundle) {
       createBundle(cell.id, cumulativeCode);
@@ -54,6 +58,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
           <CodeEditor
             initialValue={cell.content}
             onChange={(value) => updateCell(cell.id, cell.chapterId, value)}
+            runBundle={runBundle}
           />
         </Resizable>
         <div className="progress-wrapper">

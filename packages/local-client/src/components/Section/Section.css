@@ -3,9 +3,19 @@
   background-color: transparent;
 }
 
+.card.active-section {
+  border-color: #3298dc;
+}
+
 .card-header {
   cursor: pointer;
   justify-content: flex-end;
+  opacity: 0.2;
+  transition: opacity 0.3s;
+}
+
+.card-header:hover {
+  opacity: 1;
 }
 
 .card-content {
@@ -13,13 +23,13 @@
 }
 
 .section-button {
-  color: #1abc9c;
+  color: white;
   background-color: transparent;
   border-color: transparent;
 }
 
 .section-button:hover {
-  color: #1abc9c;
+  color: #3298dc;
   border-color: transparent;
   background-color: #282f2f;
 }

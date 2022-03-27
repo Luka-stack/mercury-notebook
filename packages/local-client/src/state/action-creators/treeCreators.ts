@@ -3,11 +3,10 @@ import axios from 'axios';
 import { ActionType } from '../action-types';
 import { Action } from '../actions/treeActions';
 import * as Actions from '../actions/treeActions';
-import { Tree } from '../tree';
+import { FileTree } from '../tree';
 import socket from '../../socket-connection';
 import { constructNotebookPath, createNotebookPayload } from '../../utils';
 import { RootState } from '../reducers';
-import { Cell } from '../cell';
 
 export const fetchPartialTree = (filepath: string) => {
   return async (dispatch: Dispatch<Action>) => {
@@ -17,7 +16,7 @@ export const fetchPartialTree = (filepath: string) => {
       //   const { data }: { data: Tree } = await axios.post('/trees/partial', {
       //     filepath,
       //   });
-      const { data }: { data: Tree } = await axios.post(
+      const { data }: { data: FileTree } = await axios.post(
         'http://localhost:4005/trees/partial',
         {
           filepath,
@@ -95,7 +94,35 @@ export const saveNotebookAs = (path: string) => {
   };
 };
 
-export const updateTree = (tree: Tree | null): Actions.UpdateTreeAction => {
+export const renameFile = (oldPath: string, newPath: string) => {
+  return (dispatch: Dispatch<Action>) => {
+    socket.emit(
+      'renameFile',
+      { oldPath, newPath },
+      (response: { error?: string }) => {
+        if (response.error) {
+          console.error('Error while renaming');
+        } else {
+          console.log('Successfully renamed');
+        }
+      }
+    );
+  };
+};
+
+export const deleteFiles = (trees: FileTree[]) => {
+  return (dispatch: Dispatch<Action>) => {
+    socket.emit('deleteFiles', { trees }, (response: { error?: string }) => {
+      if (response.error) {
+        console.error('Couldnt removes files');
+      } else {
+        console.log('Successfully deleted');
+      }
+    });
+  };
+};
+
+export const updateTree = (tree: FileTree | null): Actions.UpdateTreeAction => {
   return {
     type: ActionType.UPDATE_TREE,
     payload: tree,
@@ -108,5 +135,20 @@ export const updateUsedNotebooks = (
   return {
     type: ActionType.UPDATE_USED_NOTEBOOKS,
     payload: used,
+  };
+};
+
+export const selectModalFile = (
+  file: string
+): Actions.SelectModalFileAction => {
+  return {
+    type: ActionType.SELECT_MODAL_FILE,
+    payload: file,
+  };
+};
+
+export const deselectModalFile = (): Actions.DeselectModalFileAction => {
+  return {
+    type: ActionType.DESELECT_MODAL_FILE,
   };
 };

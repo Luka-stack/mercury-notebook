@@ -76,6 +76,7 @@ io.on('connection', (socket) => {
 
   socket.on('saveNotebookAs', async (payload, cb) => {
     try {
+      console.log(payload);
       await treeStore.saveNotebookAs(payload.path, payload.data);
       cb({ error: null });
     } catch (err: any) {
@@ -86,6 +87,24 @@ io.on('connection', (socket) => {
   socket.on('saveNotebook', async (payload, cb) => {
     try {
       await treeStore.saveNotebook(payload.path, payload.data);
+      cb({ error: null });
+    } catch (err: any) {
+      cb({ error: err });
+    }
+  });
+
+  socket.on('renameFile', async (payload, cb) => {
+    try {
+      await treeStore.renameFile(payload.oldPath, payload.newPath);
+      cb({ error: null });
+    } catch (err: any) {
+      cb({ error: err });
+    }
+  });
+
+  socket.on('deleteFiles', async (payload, cb) => {
+    try {
+      await treeStore.deleteFiles(payload.trees);
       cb({ error: null });
     } catch (err: any) {
       cb({ error: err });
