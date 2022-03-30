@@ -1,21 +1,24 @@
 import { useState } from 'react';
+import { useTypedSelector } from '../../hooks/use-typed-selector';
 import { TreeFileTypes } from '../../state';
 
 interface ChangeNameModalProps {
   type: TreeFileTypes;
   currName: string;
-  onSuccess: (filename: string) => void;
+  setFilename: (filename: string) => void;
   onCancel: () => void;
 }
 
 const ChangeNameModal: React.FC<ChangeNameModalProps> = ({
   type,
   currName,
-  onSuccess,
+  setFilename,
   onCancel,
 }) => {
   const [value, setValue] = useState<string>(currName.replace('.js', ''));
   const [error, setError] = useState<string>('');
+
+  const backendError = useTypedSelector((state) => state.modals.saveAsError);
 
   const labelName = type === 'file' ? 'Notebook' : 'Directory';
 
@@ -26,7 +29,7 @@ const ChangeNameModal: React.FC<ChangeNameModalProps> = ({
         'Filename can contains letters, digits, spaces, hyphen, underscore and parenthesis'
       );
     } else {
-      onSuccess(type === 'file' ? `${value}.js` : value);
+      setFilename(type === 'file' ? `${value}.js` : value);
     }
   };
 
@@ -48,7 +51,8 @@ const ChangeNameModal: React.FC<ChangeNameModalProps> = ({
             <i className={icon} />
           </span>
         </p>
-        {error !== '' && <p className="help is-danger">{error}</p>}
+        <p className="help is-danger">{error}</p>
+        <p className="help is-danger">{backendError}</p>
       </div>
     );
   };

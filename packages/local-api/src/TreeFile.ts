@@ -48,6 +48,29 @@ export class TreeFile {
     );
   }
 
+  async fetchCells(filepath: string, socketId: string): Promise<void> {
+    const fullPath = path.join(this.root, filepath);
+
+    try {
+      const result = await fs.readFile(fullPath, { encoding: 'utf-8' });
+      const id = createHash('sha1').update(fullPath).digest('base64');
+
+      try {
+        this.socket.to(socketId).emit('fetchedCells', JSON.parse(result));
+        this.socket.in(socketId).socketsJoin(id);
+        this.openFile(id, socketId);
+      } catch (err: any) {
+        this.socket
+          .to(socketId)
+          .emit('fetchedError', { error: 'Error while parsing file' });
+      }
+    } catch (err: any) {
+      this.socket
+        .to(socketId)
+        .emit('fetchedError', { error: 'Notebook was not found' });
+    }
+  }
+
   openFile(fileId: string, socketId: string): void {
     if (this.openFiles.has(fileId)) {
       return;
@@ -144,9 +167,18 @@ export class TreeFile {
       }
 
       await fs.rename(oldPath, newPath);
-      this.socket.emit('tree', {
-        ...this.scan(),
-      });
+
+      const newHash = createHash('sha1').update(newPath).digest('base64');
+      const oldHash = createHash('sha1').update(oldPath).digest('base64');
+      const socketId = this.openFiles.get(oldHash);
+
+      this.openFiles.delete(oldHash);
+      if (socketId) this.openFile(newHash, socketId);
+      else {
+        this.socket.emit('tree', {
+          ...this.scan(),
+        });
+      }
     } catch (err: unknown) {
       console.error(err);
       throw err;
@@ -154,17 +186,17 @@ export class TreeFile {
   }
 
   async deleteFiles(treeFile: { path: string }[]): Promise<void> {
-    try {
-      for (let tree of treeFile) {
+    for (let tree of treeFile) {
+      try {
         await fs.rm(tree.path);
+      } catch (err: unknown) {
+        console.error(err);
       }
-      this.socket.emit('tree', {
-        ...this.scan(),
-      });
-    } catch (err: unknown) {
-      console.error(err);
-      throw err;
     }
+
+    this.socket.emit('tree', {
+      ...this.scan(),
+    });
   }
 
   async saveNotebook(

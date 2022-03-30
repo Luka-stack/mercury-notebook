@@ -7,7 +7,6 @@ import { store } from './state';
 import { Provider } from 'react-redux';
 
 import HubLayout from './layouts/HubLayout';
-import NotFound from './layouts/NotFound';
 import SandboxLayout from './layouts/SandboxLayout';
 
 const App = () => {
@@ -17,10 +16,6 @@ const App = () => {
         <HubLayout />
       </Provider>
     );
-  }
-
-  if (window.location.pathname === '/404') {
-    return <NotFound />;
   }
 
   return (

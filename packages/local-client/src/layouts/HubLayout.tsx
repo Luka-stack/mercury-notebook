@@ -3,6 +3,7 @@ import TreeControls from '../components/Hub/TreeControls';
 import TreeHub from '../components/Hub/TreeHub';
 import Navbar from '../components/Navbar/Navbar';
 import { useActions } from '../hooks/use-actions';
+import { useTypedSelector } from '../hooks/use-typed-selector';
 import socket from '../socket-connection';
 import { FileTree } from '../state';
 

@@ -42,24 +42,27 @@ io.on('connection', (socket) => {
     ...treeStore.scan(),
   });
 
-  socket.on('openNotebook', (data) => {
-    const fullPath = path.join(
-      'D:\\Programming\\projects\\Notebooks',
-      data.partialPath
-    );
-    const id = createHash('sha1').update(fullPath).digest('base64');
-    treeStore.openFile(id, socket.id);
+  socket.on('fetchCells', (data) => {
+    treeStore.fetchCells(data.filepath, socket.id);
   });
 
-  socket.on('closeNotebok', (data) => {
-    console.log('on closeNotebook');
-    const fullPath = path.join(
-      'D:\\Programming\\projects\\Notebooks',
-      data.partialPath
-    );
-    const id = createHash('sha1').update(fullPath).digest('base64');
-    treeStore.closeFile(id);
-  });
+  // socket.on('openNotebook', (data) => {
+  //   const fullPath = path.join(
+  //     'D:\\Programming\\projects\\Notebooks',
+  //     data.partialPath
+  //   );
+  //   const id = createHash('sha1').update(fullPath).digest('base64');
+  //   treeStore.openFile(id, socket.id);
+  // });
+
+  // socket.on('closeNotebok', (data) => {
+  //   const fullPath = path.join(
+  //     'D:\\Programming\\projects\\Notebooks',
+  //     data.partialPath
+  //   );
+  //   const id = createHash('sha1').update(fullPath).digest('base64');
+  //   treeStore.closeFile(id);
+  // });
 
   socket.on('createFolder', ({ crumbPath }) => {
     treeStore.createFolder(crumbPath);
@@ -76,7 +79,6 @@ io.on('connection', (socket) => {
 
   socket.on('saveNotebookAs', async (payload, cb) => {
     try {
-      console.log(payload);
       await treeStore.saveNotebookAs(payload.path, payload.data);
       cb({ error: null });
     } catch (err: any) {
@@ -87,6 +89,7 @@ io.on('connection', (socket) => {
   socket.on('saveNotebook', async (payload, cb) => {
     try {
       await treeStore.saveNotebook(payload.path, payload.data);
+      socket.broadcast.emit('fetchedCells', payload.data);
       cb({ error: null });
     } catch (err: any) {
       cb({ error: err });

@@ -56,6 +56,38 @@ export interface DeselectModalFileAction {
   type: ActionType.DESELECT_MODAL_FILE;
 }
 
+export interface UpdateModalErrorsAction {
+  type: ActionType.UPDATE_MODAL_ERRORS;
+  payload: string;
+}
+
+export interface ClearModalErrorsAction {
+  type: ActionType.CLEAR_MODAL_ERRORS;
+}
+
+// to delete
+export interface RenameFileAction {
+  type: ActionType.RENAME_FILE;
+}
+
+export interface RenameFileCompleteAction {
+  type: ActionType.RENAME_FILE_COMPLETE;
+}
+
+export interface RenameFileErrorAction {
+  type: ActionType.RENAME_FILE_ERROR;
+  payload: string;
+}
+
+export interface SaveAsCompleteAction {
+  type: ActionType.SAVE_AS_COMPLETE;
+}
+
+export interface SaveAsErrorAction {
+  type: ActionType.SAVE_AS_ERROR;
+  payload: string;
+}
+
 export type Action =
   | FetchPartialTreeAction
   | FetchWholeTreeAction
@@ -68,4 +100,11 @@ export type Action =
   | CreateNotebookAction
   | CreateNotebookErrorAction
   | SelectModalFileAction
-  | DeselectModalFileAction;
+  | DeselectModalFileAction
+  | UpdateModalErrorsAction
+  | ClearModalErrorsAction
+  | RenameFileAction
+  | RenameFileCompleteAction
+  | RenameFileErrorAction
+  | SaveAsCompleteAction
+  | SaveAsErrorAction;

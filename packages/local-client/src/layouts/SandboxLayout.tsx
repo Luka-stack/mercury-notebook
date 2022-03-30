@@ -7,6 +7,7 @@ import Navbar from '../components/Navbar/Navbar';
 import { useActions } from '../hooks/use-actions';
 import { useTypedSelector } from '../hooks/use-typed-selector';
 import socket from '../socket-connection';
+import NotFound from './ErrorPage';
 
 const SandboxLayout = () => {
   const {
@@ -14,9 +15,12 @@ const SandboxLayout = () => {
     insertCellAfter,
     insertChapterAfter,
     bundleSelectedCell,
+    fetchCells,
+    fetchedErrors,
+    loadCells,
   } = useActions();
 
-  const selectedCell = useTypedSelector((state) => state.cells.selectedCell);
+  const { selectedCell, error } = useTypedSelector((state) => state.cells);
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -29,6 +33,14 @@ const SandboxLayout = () => {
       updateTree(data);
     });
 
+    socket.on('fetchedCells', (data) => {
+      loadCells(data);
+    });
+
+    socket.on('fetchedError', (data) => {
+      fetchedErrors(data.error);
+    });
+
     socket.on('disconnect', () => {
       console.group('[Socket] :: disconnect');
       console.log('Socket Disconnected');
@@ -36,6 +48,7 @@ const SandboxLayout = () => {
     });
 
     socket.connect();
+    fetchCells();
   }, []);
 
   useEffect(() => {
@@ -59,6 +72,10 @@ const SandboxLayout = () => {
       false
     );
   }, [selectedCell]);
+
+  if (error) {
+    return <NotFound error={error} />;
+  }
 
   return (
     <div>

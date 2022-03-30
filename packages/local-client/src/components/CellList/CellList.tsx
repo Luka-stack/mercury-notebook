@@ -8,9 +8,7 @@ import Section from '../Section/Section';
 import AddSection from '../AddSection/AddSection';
 import CellListItem from './CellListItem/CellListItem';
 import { useTypedSelector } from '../../hooks/use-typed-selector';
-import { useActions } from '../../hooks/use-actions';
 import { Chapter } from '../../state/chapter';
-import socket from '../../socket-connection';
 
 const CellList: React.FC = () => {
   const [cells, chapters] = useTypedSelector(({ cells }) => {
@@ -26,24 +24,6 @@ const CellList: React.FC = () => {
 
     return [cellsData, chapters];
   });
-
-  const { fetchCells } = useActions();
-
-  useEffect(() => {
-    fetchCells();
-
-    socket.emit('openNotebook', {
-      partialPath: window.location.pathname.replace('/notebooks', ''),
-    });
-
-    return () => {
-      socket.emit('closeNotebook', {
-        partialPath: window.location.pathname.replace('/notebooks', ''),
-      });
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const renderCells = (sectionId: string) =>
     cells.get(sectionId)?.map((cell) => (

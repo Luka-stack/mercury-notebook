@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useActions } from '../../hooks/use-actions';
 import { useTypedSelector } from '../../hooks/use-typed-selector';
 import ChangeNameModal from '../Modals/ChangeNameModal';
 
@@ -6,26 +7,31 @@ const FileTitle = () => {
   const [name, setName] = useState<string>('');
   const [isShowing, setIsShowing] = useState<boolean>(false);
 
+  const { renameFile, cleanRenameErrors } = useActions();
+
   const path = useTypedSelector((state) => {
     const intersection = state.trees.root.path.includes('\\') ? '\\' : '/';
 
-    return `${
-      state.trees.root.path
-    }${intersection}${window.location.pathname.replace('/notebooks/', '')}`;
+    return `${state.trees.root.path}${intersection}`;
   });
 
   const onNameChanged = (filename: string) => {
-    setIsShowing(false);
-    window.history.pushState(
-      '',
-      '',
-      window.location.pathname.replace(name, filename)
-    );
-    setName(filename);
+    const fullPath = path + window.location.pathname.replace('/notebooks/', '');
+
+    renameFile(fullPath, fullPath.replace(`${name}.js`, filename), () => {
+      setIsShowing(false);
+      window.history.pushState(
+        '',
+        '',
+        window.location.pathname.replace(name, filename)
+      );
+      setName(filename);
+    });
   };
 
   const onCancel = () => {
     setIsShowing(false);
+    cleanRenameErrors();
   };
 
   useEffect(() => {
@@ -55,7 +61,7 @@ const FileTitle = () => {
       </div>
       {isShowing && (
         <ChangeNameModal
-          onSuccess={onNameChanged}
+          setFilename={onNameChanged}
           onCancel={onCancel}
           tree={{ type: 'file', path, name: `${name}.js` }}
         />

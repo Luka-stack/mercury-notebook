@@ -8,7 +8,8 @@ const FileDropdown = () => {
   const [filePicker, setFilePicker] = useState<boolean>(false);
   const [namePicker, setNamePicker] = useState<boolean>(false);
 
-  const { createNotebook, saveNotebook, saveNotebookAs } = useActions();
+  const { createNotebook, saveNotebook, saveNotebookAs, cleanSaveAsErrors } =
+    useActions();
 
   const onNewClick = () => {
     const path = window.location.pathname.split('/').slice(2, -1).join('/');
@@ -23,8 +24,14 @@ const FileDropdown = () => {
   const saveAs = (filename: string) => {
     const path =
       window.location.pathname.split('/').slice(2, -1).join('/') + filename;
-    saveNotebookAs(path);
+    saveNotebookAs(path, () => {
+      setNamePicker(false);
+    });
+  };
+
+  const onSaveAsClosed = () => {
     setNamePicker(false);
+    cleanSaveAsErrors();
   };
 
   useEffect(() => {
@@ -76,8 +83,8 @@ const FileDropdown = () => {
         <NameInputModal
           type="file"
           currName=""
-          onSuccess={saveAs}
-          onCancel={() => setNamePicker(false)}
+          setFilename={saveAs}
+          onCancel={onSaveAsClosed}
         />
       )}
     </>

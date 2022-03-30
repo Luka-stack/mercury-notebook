@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useActions } from '../../hooks/use-actions';
+import { useTypedSelector } from '../../hooks/use-typed-selector';
 
 interface ChangeNameModalProps {
   tree: {
@@ -7,32 +7,31 @@ interface ChangeNameModalProps {
     type: string;
     name: string;
   };
-  onSuccess: (filename: string) => void;
+  setFilename: (filename: string) => void;
   onCancel: () => void;
 }
 
 const ChangeNameModal: React.FC<ChangeNameModalProps> = ({
   tree,
-  onSuccess,
+  setFilename,
   onCancel,
 }) => {
   const [value, setValue] = useState<string>(tree.name.replace('.js', ''));
-  const [error, setError] = useState<string>('');
+  const [localError, setLocalError] = useState<string>('');
 
-  const { renameFile } = useActions();
+  const backendError = useTypedSelector((state) => state.modals.filenameError);
 
   const labelName = tree.type === 'file' ? 'Notebook' : 'Directory';
 
   const onSave = () => {
     const regexName = /([a-zA-Z0-9\s_\-\(\):])+/g;
     if (regexName.test(value) === false) {
-      setError(
-        'Filename can contains letters, digits, spaces, hyphen, underscore and parenthesis'
+      setLocalError(
+        'Filename can contains letters, digits, spaces, hyphens, underscores and parenthesis'
       );
     } else {
       const extName = tree.type === 'file' ? `${value}.js` : value;
-      renameFile(tree.path, tree.path.replace(tree.name, extName));
-      onSuccess(value);
+      setFilename(extName);
     }
   };
 
@@ -54,7 +53,8 @@ const ChangeNameModal: React.FC<ChangeNameModalProps> = ({
             <i className={icon} />
           </span>
         </p>
-        {error !== '' && <p className="help is-danger">{error}</p>}
+        <p className="help is-danger">{localError}</p>
+        <p className="help is-danger">{backendError}</p>
       </div>
     );
   };

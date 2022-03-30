@@ -38,4 +38,14 @@ export enum ActionType {
   DESELECT_MODAL_FILE = 'deselect_modal_file',
 
   SELECT_CODE_CELL = 'select_code_cell',
+
+  CLEAR_MODAL_ERRORS = 'clear_modal_errors',
+  UPDATE_MODAL_ERRORS = 'update_modal_errors',
+
+  SAVE_AS_COMPLETE = 'save_as_complete',
+  SAVE_AS_ERROR = 'save_as_error',
+
+  RENAME_FILE = 'rename_file',
+  RENAME_FILE_COMPLETE = 'rename_file_complete',
+  RENAME_FILE_ERROR = 'rename_file_error',
 }

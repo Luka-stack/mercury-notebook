@@ -1,5 +1,4 @@
 import { Dispatch } from 'redux';
-import axios from 'axios';
 import { ActionType } from '../action-types';
 import {
   UpdateCellAction,
@@ -14,6 +13,9 @@ import {
   ToggleAutoCompileAction,
   ToggleAutoSaveAction,
   SelectCodeCellAction,
+  FetchCellsCompleteAction,
+  FetchCellsErrorAction,
+  FetchCellsAction,
 } from '../actions';
 import { Cell, CellTypes } from '../cell';
 import { Chapter } from '../chapter';
@@ -184,57 +186,29 @@ export const selectCodeCell = (cell: Cell): SelectCodeCellAction => {
   };
 };
 
-// DELETE ??????????????????????
-export const fetchCells = () => {
-  return async (dispatch: Dispatch<Action>) => {
-    dispatch({ type: ActionType.FETCH_CELLS });
+export const fetchCells = (): FetchCellsAction => {
+  const filepath = window.location.pathname.replace('/notebooks/', '');
+  socket.emit('fetchCells', { filepath });
 
-    try {
-      const filepath = window.location.pathname
-        .split('/notebooks/')
-        .slice(1)
-        .join('/');
-
-      const { data }: { data: { chapters: Chapter[]; cells: Cell[] } } =
-        await axios.post('http://localhost:4005/notebooks/read', {
-          filepath,
-        });
-
-      dispatch({ type: ActionType.FETCH_CELLS_COMPLETE, payload: data });
-    } catch (err: any) {
-      dispatch({ type: ActionType.FETCH_CELLS_ERROR, payload: err.message });
-      // window.open(`${window.location.origin}/404`, '_self');
-    }
+  return {
+    type: ActionType.FETCH_CELLS,
   };
 };
 
-export const saveCells = () => {
-  return async (dispatch: Dispatch<Action>, getState: () => RootState) => {
-    const {
-      cells: { order, chapters, data },
-    } = getState();
+export const loadCells = (data: {
+  chapters: Chapter[];
+  cells: Cell[];
+}): FetchCellsCompleteAction => {
+  return {
+    type: ActionType.FETCH_CELLS_COMPLETE,
+    payload: data,
+  };
+};
 
-    const orderedChapters = order.map((id) => chapters[id]);
-    const orderedcells: Cell[] = [];
-
-    orderedChapters.forEach((chapter) => {
-      chapter.content.forEach((id) => orderedcells.push(data[id]));
-    });
-
-    const filepath = window.location.pathname
-      .split('/notebooks/')
-      .slice(1)
-      .join('/');
-
-    try {
-      await axios.post(`http://localhost:4005/notebooks/save`, {
-        chapters: orderedChapters,
-        cells: orderedcells,
-        filepath,
-      });
-    } catch (err: any) {
-      dispatch({ type: ActionType.SAVE_CELLS_ERROR, payload: err.message });
-    }
+export const fetchedErrors = (error: string): FetchCellsErrorAction => {
+  return {
+    type: ActionType.FETCH_CELLS_ERROR,
+    payload: error,
   };
 };
 

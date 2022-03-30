@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { Action } from '../actions';
 import { ActionType } from '../action-types';
-import { saveCells } from '../action-creators';
+import { saveNotebook } from '../action-creators';
 import { RootState } from '../reducers';
 
 export const persistMiddleware = ({
@@ -30,7 +30,11 @@ export const persistMiddleware = ({
           clearTimeout(timer);
         }
         timer = setTimeout(() => {
-          saveCells()(dispatch, getState);
+          // saveCells()(dispatch, getState);
+          saveNotebook(window.location.pathname.replace('/notebooks/', ''))(
+            dispatch,
+            getState
+          );
         }, 2500);
       }
     };

@@ -12,7 +12,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "tsc --watch --preserveWatchOutput",
-    "develop": "nodemon --exec ts-node src/index.ts",
+    "dev": "nodemon --exec ts-node src/index.ts",
     "prepublishOnly": "tsc"
   },
   "keywords": [],

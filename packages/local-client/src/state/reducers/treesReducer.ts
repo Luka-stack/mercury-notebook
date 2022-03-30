@@ -32,18 +32,6 @@ const reducer = produce(
         state.error = action.payload;
         return state;
 
-      // case ActionType.FETCH_TREE_COMPLETE:
-      //   state.loading = false;
-      //   state.error = null;
-
-      //   if (state.root === '') {
-      //     state.root = action.paylaod.path;
-      //   }
-
-      //   state.tree = action.paylaod;
-
-      //   return state;
-
       case ActionType.UPDATE_TREE:
         state.tree = action.payload;
 
@@ -68,10 +56,6 @@ const reducer = produce(
       case ActionType.DESELECT_MODAL_FILE:
         state.modalFile = '';
         return state;
-
-      // case ActionType.UPDATE_USED_NOTEBOOKS:
-      //   state.usedNotebook = action.payload;
-      //   return state;
 
       default:
         return state;

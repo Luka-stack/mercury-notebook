@@ -22,11 +22,19 @@ const TreeControls: React.FC<TreeControlsProps> = ({
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const { createFolder, createNotebook } = useActions();
 
-  const { deleteFiles } = useActions();
+  const { deleteFiles, renameFile, cleanRenameErrors } = useActions();
 
-  const onNameChanged = (_filename: string) => {
+  const onNameChanged = (filename: string) => {
+    const tree = selectedFiles[0];
+    renameFile(tree.path, tree.path.replace(tree.name, filename), () => {
+      setRenameModal(false);
+      setSelectedFiles([]);
+    });
+  };
+
+  const onRenameModalClosed = () => {
+    cleanRenameErrors();
     setRenameModal(false);
-    setSelectedFiles([]);
   };
 
   const onDeleteClick = () => {
@@ -88,8 +96,8 @@ const TreeControls: React.FC<TreeControlsProps> = ({
       </div>
       {renameModal && (
         <ChangeNameModal
-          onSuccess={onNameChanged}
-          onCancel={() => setRenameModal(false)}
+          setFilename={onNameChanged}
+          onCancel={onRenameModalClosed}
           tree={selectedFiles[0]}
         />
       )}
