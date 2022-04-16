@@ -4,8 +4,9 @@ import { Action } from '../actions/treeActions';
 import * as Actions from '../actions/treeActions';
 import { FileTree } from '../tree';
 import socket from '../../socket-connection';
-import { constructNotebookPath, createNotebookPayload } from '../../utils';
 import { RootState } from '../reducers';
+import { windowRouter } from '../../router';
+import { createNotebookPayload } from '../../utils';
 
 export const createFolder = (path: string) => {
   return (dispatch: Dispatch<Action>) => {
@@ -39,7 +40,9 @@ export const createNotebook = (path: string, redirect = false) => {
           });
 
           if (redirect) {
-            window.open(constructNotebookPath(path, response.filename!));
+            windowRouter.newWindow(
+              windowRouter.constructNotebookPath(path, response.filename!)
+            );
           }
         }
       }

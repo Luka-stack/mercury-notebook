@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useActions } from '../../hooks/use-actions';
 import { useTypedSelector } from '../../hooks/use-typed-selector';
+import { windowRouter } from '../../router';
 import ChangeNameModal from '../Modals/ChangeNameModal';
 
 const FileTitle = () => {
@@ -16,15 +17,11 @@ const FileTitle = () => {
   });
 
   const onNameChanged = (filename: string) => {
-    const fullPath = path + window.location.pathname.replace('/notebooks/', '');
+    const fullPath = path + windowRouter.getFilePath();
 
     renameFile(fullPath, fullPath.replace(`${name}.js`, filename), () => {
       setIsShowing(false);
-      window.history.pushState(
-        '',
-        '',
-        window.location.pathname.replace(name, filename)
-      );
+      windowRouter.updateRoute(name, filename);
       setName(filename);
     });
   };
@@ -35,9 +32,7 @@ const FileTitle = () => {
   };
 
   useEffect(() => {
-    setName(
-      window.location.pathname.split('/').slice(-1)[0].replace('.js', '')
-    );
+    setName(windowRouter.getCurrentFilename());
   }, []);
 
   return (

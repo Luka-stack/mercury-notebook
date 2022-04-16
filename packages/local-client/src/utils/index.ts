@@ -1,8 +1,6 @@
 import { Cell, FileTree } from '../state';
 import { Chapter } from '../state/chapter';
 
-const ROOT_TAB_NOTEBOOK = 'notebooks';
-
 export const findTree = (
   tree: FileTree | null,
   lookingFor: string
@@ -27,17 +25,6 @@ export const findTree = (
   }
 
   return null;
-};
-
-export const constructNotebookPath = (
-  path: string,
-  filename: string
-): string => {
-  if (path === '') {
-    return `/${ROOT_TAB_NOTEBOOK}/${filename}`;
-  }
-
-  return `/${ROOT_TAB_NOTEBOOK}/${path}/${filename}`;
 };
 
 export const createNotebookPayload = (

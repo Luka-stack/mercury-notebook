@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useActions } from '../../../hooks/use-actions';
+import { windowRouter } from '../../../router';
 import FilePickerModal from '../../Modals/FilePickerModal';
 import NameInputModal from '../../Modals/NameInputModal';
 import DropdownItem from './DropdownItem';
@@ -12,18 +13,17 @@ const FileDropdown = () => {
     useActions();
 
   const onNewClick = () => {
-    const path = window.location.pathname.split('/').slice(2, -1).join('/');
+    const path = windowRouter.getDirPath();
     createNotebook(path, true);
   };
 
   const onSaveClick = () => {
-    const path = window.location.pathname.replace('/notebooks/', '');
+    const path = windowRouter.getFilePath();
     saveNotebook(path);
   };
 
   const saveAs = (filename: string) => {
-    const path =
-      window.location.pathname.split('/').slice(2, -1).join('/') + filename;
+    const path = windowRouter.getDirPath() + filename;
     saveNotebookAs(path, () => {
       setNamePicker(false);
     });
