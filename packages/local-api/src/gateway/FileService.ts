@@ -62,8 +62,8 @@ export default class FileService {
       const fullPath = path.join(this.rootPath, dirpath, dirname);
 
       await mkdir(fullPath);
-      // emit tree
     } catch (err: unknown) {
+      console.log(err);
       throw "Couldn't create folder";
     }
   }
@@ -88,13 +88,12 @@ export default class FileService {
   async deleteFiles(treeFiles: { path: string }[]): Promise<void> {
     try {
       for (let tree of treeFiles) {
-        await rm(tree.path);
+        await rm(tree.path, { recursive: true, force: true });
       }
     } catch (err: unknown) {
+      console.log(err);
       throw "Couldn't delete all files";
     }
-
-    // emit Tree
   }
 
   private idCallback: DirectoryTreeCallback = (

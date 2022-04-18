@@ -29,13 +29,14 @@ export class Gateway {
         ...this.fileService.scan(),
       });
 
-      // disconnect
       socket.on('disconnect', () => this.onDisconnect(socket.id));
 
-      socket.on('fetchCells', (payload) => this.onFetchCells(socket, payload));
+      socket.on('fetchCells', (payload, ack) =>
+        this.onFetchCells(socket, payload, ack)
+      );
 
-      socket.on('createFolder', (payload) =>
-        this.onCreateFolder(socket, payload)
+      socket.on('createFolder', (payload, ack) =>
+        this.onCreateFolder(payload, ack)
       );
 
       socket.on('createNotebook', (payload, ack) =>
@@ -65,7 +66,7 @@ export class Gateway {
 
   async deleteFiles(
     payload: { trees: { path: string }[] },
-    ack: (error: string | undefined) => void
+    ack: (error: { msg: string } | undefined) => void
   ): Promise<void> {
     try {
       await this.fileService.deleteFiles(payload.trees);
@@ -73,27 +74,28 @@ export class Gateway {
 
       this.emitTree();
     } catch (error: unknown) {
-      ack(error as string);
+      ack({ msg: error as string });
     }
   }
 
   async renameFile(
     payload: { oldPath: string; newPath: string },
-    ack: (error: string | undefined) => void
+    ack: (error: { msg: string } | undefined) => void
   ): Promise<void> {
     try {
       await this.fileService.renameFile(payload.oldPath, payload.newPath);
 
       this.emitTree();
+      ack(undefined);
     } catch (error: unknown) {
-      ack(error as string);
+      ack({ msg: error as string });
     }
   }
 
   async saveNotebook(
-    scoket: Socket,
+    socket: Socket,
     payload: { path: string; data: { chapters: Chapter[]; cells: Cell[] } },
-    ack: (error: string | undefined) => void,
+    ack: (error: { msg: string } | undefined) => void,
     isNew: boolean
   ): Promise<void> {
     try {
@@ -104,18 +106,18 @@ export class Gateway {
       );
 
       if (!isNew) {
-        scoket.to(id).emit('fetchedCells', payload.data);
+        socket.broadcast.emit('forcedUpdate', payload.data);
       }
 
       ack(undefined);
     } catch (error: unknown) {
-      ack(error as string);
+      ack({ msg: error as string });
     }
   }
 
   async createNotebook(
     payload: { path: string },
-    ack: (error: string | undefined, filename?: string) => void
+    ack: (error: { msg: string } | undefined, filename?: string) => void
   ): Promise<void> {
     try {
       const filename = await this.notebookService.createNotebook(payload.path);
@@ -123,37 +125,42 @@ export class Gateway {
 
       this.emitTree();
     } catch (error: unknown) {
-      ack(error as string);
+      ack({ msg: error as string });
     }
   }
 
   async onFetchCells(
     socket: Socket,
-    payload: { filepath: string }
+    payload: { filepath: string },
+    ack: (error: { msg: string } | undefined, data?: {}) => void
   ): Promise<void> {
     try {
       const [id, json] = await this.notebookService.fetchNotebook(
         payload.filepath
       );
 
-      socket.emit('fetchedCells', json);
       socket.join(id);
       this.fileService.openFile(id, socket.id);
+
+      ack(undefined, json);
+
       this.emitTree();
     } catch (error: unknown) {
-      socket.emit('fetchedError', { error });
+      ack({ msg: error as string });
     }
   }
 
   async onCreateFolder(
-    socket: Socket,
-    payload: { crumbPath: string }
+    payload: { path: string },
+    ack: (error: { msg: string } | undefined) => void
   ): Promise<void> {
     try {
-      await this.fileService.createFolder(payload.crumbPath);
+      await this.fileService.createFolder(payload.path);
       this.emitTree();
+
+      ack(undefined);
     } catch (error: unknown) {
-      socket.emit('error', { error });
+      ack({ msg: error as string });
     }
   }
 
