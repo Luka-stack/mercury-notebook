@@ -1,8 +1,9 @@
 import { Dispatch } from 'redux';
-import { Action } from '../actions';
 import { ActionType } from '../action-types';
-import { saveNotebook } from '../action-creators';
+import { saveCells } from '../action-creators';
 import { RootState } from '../reducers';
+import { windowRouter } from '../../router';
+import { Action } from '../actions/notificationsActions';
 
 export const persistMiddleware = ({
   dispatch,
@@ -30,11 +31,7 @@ export const persistMiddleware = ({
           clearTimeout(timer);
         }
         timer = setTimeout(() => {
-          // saveCells()(dispatch, getState);
-          saveNotebook(window.location.pathname.replace('/notebooks/', ''))(
-            dispatch,
-            getState
-          );
+          saveCells(windowRouter.getFilePath())(dispatch, getState);
         }, 2500);
       }
     };

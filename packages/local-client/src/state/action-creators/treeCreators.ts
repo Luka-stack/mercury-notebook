@@ -1,47 +1,48 @@
 import { Dispatch } from 'redux';
 import { ActionType } from '../action-types';
-import { Action } from '../actions/treeActions';
+import { Action as NotificationsAction } from '../actions/notificationsActions';
 import * as Actions from '../actions/treeActions';
 import { FileTree } from '../tree';
 import socket from '../../socket-connection';
 import { RootState } from '../reducers';
 import { windowRouter } from '../../router';
 import { createNotebookPayload } from '../../utils';
+import { addNotification } from './notificationsCreators';
 
 export const createFolder = (path: string) => {
-  return (dispatch: Dispatch<Action>) => {
-    socket.emit('createFolder', { path }, (response: { error: string }) => {
-      if (response.error) {
-        dispatch({
-          type: ActionType.CREATE_FOLDER_ERROR,
-          payload: response.error,
-        });
-      } else {
-        dispatch({ type: ActionType.CREATE_FOLDER });
+  return (dispatch: Dispatch<NotificationsAction>) => {
+    socket.emit(
+      'createFolder',
+      { path },
+      (error: { msg: string } | undefined) => {
+        if (error) {
+          dispatch(addNotification(error.msg, 'error'));
+        } else {
+          dispatch(
+            addNotification('Folder has been successfully created!', 'info')
+          );
+        }
       }
-    });
+    );
   };
 };
 
 export const createNotebook = (path: string, redirect = false) => {
-  return (dispatch: Dispatch<Action>) => {
+  return (dispatch: Dispatch<NotificationsAction>) => {
     socket.emit(
       'createNotebook',
       { path },
-      (response: { error?: string; filename?: string }) => {
-        if (response.error) {
-          dispatch({
-            type: ActionType.CREATE_NOTEBOOK_ERROR,
-            payload: response.error,
-          });
+      (error: { msg: string } | undefined, filename: string) => {
+        if (error) {
+          dispatch(addNotification(error.msg, 'error'));
         } else {
-          dispatch({
-            type: ActionType.CREATE_NOTEBOOK,
-          });
+          dispatch(
+            addNotification('Notebook has been successfully created!', 'info')
+          );
 
           if (redirect) {
             windowRouter.newWindow(
-              windowRouter.constructNotebookPath(path, response.filename!)
+              windowRouter.constructNotebookPath(path, filename)
             );
           }
         }
@@ -50,8 +51,11 @@ export const createNotebook = (path: string, redirect = false) => {
   };
 };
 
-export const saveNotebookAs = (path: string, callback: () => void) => {
-  return (dispatch: Dispatch<Action>, getState: () => RootState) => {
+export const saveNotebookAs = (path: string) => {
+  return (
+    dispatch: Dispatch<NotificationsAction>,
+    getState: () => RootState
+  ) => {
     const {
       cells: { order, chapters, data },
     } = getState();
@@ -63,17 +67,13 @@ export const saveNotebookAs = (path: string, callback: () => void) => {
         path,
         data: payload,
       },
-      (response: { error?: string }) => {
-        if (response.error) {
-          dispatch({
-            type: ActionType.SAVE_AS_ERROR,
-            payload: response.error,
-          });
+      (error: { msg: string } | undefined) => {
+        if (error) {
+          dispatch(addNotification(error.msg, 'error'));
         } else {
-          dispatch({
-            type: ActionType.SAVE_AS_COMPLETE,
-          });
-          callback();
+          dispatch(
+            addNotification('Notebook has been successfully created!', 'info')
+          );
         }
       }
     );
@@ -85,20 +85,17 @@ export const renameFile = (
   newPath: string,
   callback: () => void
 ) => {
-  return (dispatch: Dispatch<Action>) => {
+  return (dispatch: Dispatch<NotificationsAction>) => {
     socket.emit(
       'renameFile',
       { oldPath, newPath },
-      (response: { error?: string }) => {
-        if (response.error) {
-          dispatch({
-            type: ActionType.RENAME_FILE_ERROR,
-            payload: response.error,
-          });
+      (error: { msg: string } | undefined) => {
+        if (error) {
+          dispatch(addNotification(error.msg, 'error'));
         } else {
-          dispatch({
-            type: ActionType.RENAME_FILE_COMPLETE,
-          });
+          dispatch(
+            addNotification('File has been succussfully renamed', 'info')
+          );
           callback();
         }
       }
@@ -107,14 +104,18 @@ export const renameFile = (
 };
 
 export const deleteFiles = (trees: FileTree[]) => {
-  return (dispatch: Dispatch<Action>) => {
-    socket.emit('deleteFiles', { trees }, (response: { error?: string }) => {
-      if (response.error) {
-        console.error('Couldnt removes files');
-      } else {
-        console.log('Successfully deleted');
+  return (dispatch: Dispatch<NotificationsAction>) => {
+    socket.emit(
+      'deleteFiles',
+      { trees },
+      (error: { msg: string } | undefined) => {
+        if (error) {
+          dispatch(addNotification(error.msg, 'error'));
+        } else {
+          dispatch(addNotification('Successfully deleted files', 'info'));
+        }
       }
-    });
+    );
   };
 };
 

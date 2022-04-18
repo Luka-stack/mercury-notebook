@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useActions } from '../../hooks/use-actions';
 import { useTypedSelector } from '../../hooks/use-typed-selector';
 import { windowRouter } from '../../router';
-import ChangeNameModal from '../Modals/ChangeNameModal';
+import NameInputModal from '../Modals/NameInputModal';
 
 const FileTitle = () => {
   const [name, setName] = useState<string>('');
@@ -55,11 +55,17 @@ const FileTitle = () => {
         </b>
       </div>
       {isShowing && (
-        <ChangeNameModal
+        <NameInputModal
+          type="file"
+          currName="name"
           setFilename={onNameChanged}
           onCancel={onCancel}
-          tree={{ type: 'file', path, name: `${name}.js` }}
         />
+        // <ChangeNameModal
+        //   setFilename={onNameChanged}
+        //   onCancel={onCancel}
+        //   tree={{ type: 'file', path, name: `${name}.js` }}
+        // />
       )}
     </>
   );

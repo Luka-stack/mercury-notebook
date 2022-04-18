@@ -82,12 +82,13 @@ const Section: React.FC<SectionProps> = ({ id, description, children }) => {
         <div style={{ display: isOpen ? 'block' : 'none' }}>{children}</div>
       </div>
 
-      <ConfirmModal
-        contnet="You are about to delete chapter with multiple cells."
-        isShowing={showModal}
-        setIsShowing={setShowModal}
-        onConfirm={onConfirmModal}
-      />
+      {showModal && (
+        <ConfirmModal
+          contnet="You are about to delete chapter with multiple cells."
+          onCancel={() => setShowModal(false)}
+          onConfirm={onConfirmModal}
+        />
+      )}
     </div>
   );
 };

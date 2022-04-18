@@ -1,6 +1,7 @@
 import { ActionType } from '../action-types';
 import { Cell, CellTypes } from '../cell';
 import { Chapter } from '../chapter';
+import { Toast } from '../toast';
 
 export type Direction = 'up' | 'down';
 

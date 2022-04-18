@@ -9,7 +9,7 @@ const FileDropdown = () => {
   const [filePicker, setFilePicker] = useState<boolean>(false);
   const [namePicker, setNamePicker] = useState<boolean>(false);
 
-  const { createNotebook, saveNotebook, saveNotebookAs, cleanSaveAsErrors } =
+  const { createNotebook, saveCells, saveNotebookAs, cleanSaveAsErrors } =
     useActions();
 
   const onNewClick = () => {
@@ -19,14 +19,13 @@ const FileDropdown = () => {
 
   const onSaveClick = () => {
     const path = windowRouter.getFilePath();
-    saveNotebook(path);
+    saveCells(path);
   };
 
   const saveAs = (filename: string) => {
     const path = windowRouter.getDirPath() + filename;
-    saveNotebookAs(path, () => {
-      setNamePicker(false);
-    });
+    saveNotebookAs(path);
+    setNamePicker(false);
   };
 
   const onSaveAsClosed = () => {
@@ -56,6 +55,7 @@ const FileDropdown = () => {
         setFilePicker(true);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -78,7 +78,7 @@ const FileDropdown = () => {
           />
         </div>
       </div>
-      <FilePickerModal isShowing={filePicker} setIsShowing={setFilePicker} />
+      {filePicker && <FilePickerModal setIsShowing={setFilePicker} />}
       {namePicker && (
         <NameInputModal
           type="file"

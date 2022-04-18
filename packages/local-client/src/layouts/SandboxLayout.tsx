@@ -4,9 +4,11 @@ import FileDropdown from '../components/Navbar/dropdowns/FileDropdown';
 import OptionsDropdown from '../components/Navbar/dropdowns/OptionsDropdown';
 import FileTitle from '../components/Navbar/FileTitle';
 import Navbar from '../components/Navbar/Navbar';
+import ToastPortal from '../components/ToastPortal/ToastPortal';
 import { useActions } from '../hooks/use-actions';
 import { useTypedSelector } from '../hooks/use-typed-selector';
 import socket from '../socket-connection';
+import { addNotification } from '../state/action-creators';
 import NotFound from './ErrorPage';
 
 const SandboxLayout = () => {
@@ -17,7 +19,7 @@ const SandboxLayout = () => {
     bundleSelectedCell,
     fetchCells,
     fetchedErrors,
-    loadCells,
+    forcedUpdate,
   } = useActions();
 
   const { selectedCell, error } = useTypedSelector((state) => state.cells);
@@ -33,12 +35,10 @@ const SandboxLayout = () => {
       updateTree(data);
     });
 
-    socket.on('fetchedCells', (data) => {
-      loadCells(data);
-    });
-
-    socket.on('fetchedError', (data) => {
-      fetchedErrors(data.error);
+    socket.on('forcedUpdate', (data) => {
+      addNotification('File has been updated in another tab!', 'error');
+      console.log('forced');
+      // forcedUpdate(data);
     });
 
     socket.on('disconnect', () => {
@@ -49,6 +49,7 @@ const SandboxLayout = () => {
 
     socket.connect();
     fetchCells();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -59,7 +60,7 @@ const SandboxLayout = () => {
           if (event.key === 'Enter' && event.altKey) {
             event.preventDefault();
             bundleSelectedCell();
-          } else if (event.key === 'c' && event.altKey) {
+          } else if (event.key === 'i' && event.altKey) {
             event.preventDefault();
             insertCellAfter(selectedCell.id, selectedCell.chapterId, 'code');
           } else if (event.key === 't' && event.altKey) {
@@ -71,6 +72,7 @@ const SandboxLayout = () => {
       },
       false
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCell]);
 
   if (error) {
@@ -85,6 +87,7 @@ const SandboxLayout = () => {
         <FileTitle />
       </Navbar>
       <CellList />
+      <ToastPortal autoClose={true} />
     </div>
   );
 };

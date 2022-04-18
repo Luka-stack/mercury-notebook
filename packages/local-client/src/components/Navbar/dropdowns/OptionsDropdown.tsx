@@ -39,10 +39,13 @@ const OptionsDropdown = () => {
           />
         </div>
       </div>
-      <ShortcutsModal
-        isShowing={shortcutsInfo}
-        setIsShowing={setShortcutsInfo}
-      />
+      {shortcutsInfo && (
+        <ShortcutsModal
+          onCancel={() => {
+            setShortcutsInfo(true);
+          }}
+        />
+      )}
     </>
   );
 };

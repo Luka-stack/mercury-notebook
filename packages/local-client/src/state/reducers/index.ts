@@ -2,13 +2,13 @@ import { combineReducers } from 'redux';
 import cellsReducer from './cellsReducer';
 import bundleReducer from './bundlesReducer';
 import treesReducer from './treesReducer';
-import modalsReducer from './modalsReducer';
+import notificationsReduer from './notificationsReducer';
 
 const reducers = combineReducers({
   cells: cellsReducer,
   bundles: bundleReducer,
   trees: treesReducer,
-  modals: modalsReducer,
+  notifications: notificationsReduer,
 });
 
 export default reducers;

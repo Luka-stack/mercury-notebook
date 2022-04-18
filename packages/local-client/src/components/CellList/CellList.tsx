@@ -1,6 +1,6 @@
 import './CellList.css';
 
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 
 import { Cell } from '../../state';
 import AddCell from '../AddCell/AddCell';
@@ -11,6 +11,8 @@ import { useTypedSelector } from '../../hooks/use-typed-selector';
 import { Chapter } from '../../state/chapter';
 
 const CellList: React.FC = () => {
+  console.log('Rendered');
+
   const [cells, chapters] = useTypedSelector(({ cells }) => {
     const chapters = cells.order.map((id) => cells.chapters[id]);
     const cellsData: Map<string, Cell[]> = new Map();

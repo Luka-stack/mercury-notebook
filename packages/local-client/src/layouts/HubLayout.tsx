@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import TreeControls from '../components/Hub/TreeControls';
 import TreeHub from '../components/Hub/TreeHub';
 import Navbar from '../components/Navbar/Navbar';
+import ToastPortal from '../components/ToastPortal/ToastPortal';
 import { useActions } from '../hooks/use-actions';
-import { useTypedSelector } from '../hooks/use-typed-selector';
 import socket from '../socket-connection';
 import { FileTree } from '../state';
 
@@ -17,7 +17,7 @@ const HubLayout = () => {
   const [selectedFiles, setSelectedFiles] = useState<FileTree[]>([]);
   const [dirBreadcrumb, setDirBreadcrumb] = useState<PartialTree[]>([]);
 
-  const { updateTree } = useActions();
+  const { updateTree, addNotification } = useActions();
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -28,6 +28,18 @@ const HubLayout = () => {
 
     socket.on('tree', (data) => {
       updateTree(data);
+    });
+
+    socket.on('info', (message) => {
+      addNotification(message, 'info');
+    });
+
+    socket.on('warn', (message) => {
+      addNotification(message, 'warn');
+    });
+
+    socket.on('error', (message) => {
+      addNotification(message, 'error');
     });
 
     socket.on('disconnect', () => {
@@ -53,6 +65,7 @@ const HubLayout = () => {
         selectedFiles={selectedFiles}
         setSelectedFiles={setSelectedFiles}
       />
+      <ToastPortal autoClose={true} />
     </>
   );
 };

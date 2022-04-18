@@ -4,8 +4,8 @@ import { PartialTree } from '../../layouts/HubLayout';
 import { useActions } from '../../hooks/use-actions';
 import { FileTree } from '../../state';
 import { useState } from 'react';
-import ChangeNameModal from '../Modals/ChangeNameModal';
 import ConfirmModal from '../Modals/ConfirmModal';
+import NameInputModal from '../Modals/NameInputModal';
 
 interface TreeControlsProps {
   breadcrumb: PartialTree[];
@@ -20,9 +20,10 @@ const TreeControls: React.FC<TreeControlsProps> = ({
 }) => {
   const [renameModal, setRenameModal] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const { createFolder, createNotebook } = useActions();
+  const { createNotebook } = useActions();
 
-  const { deleteFiles, renameFile, cleanRenameErrors } = useActions();
+  const { deleteFiles, createFolder, renameFile, cleanRenameErrors } =
+    useActions();
 
   const onNameChanged = (filename: string) => {
     const tree = selectedFiles[0];
@@ -58,6 +59,7 @@ const TreeControls: React.FC<TreeControlsProps> = ({
     }
 
     createFolder(crumbPath);
+    // socket.emit('createFolder', { crumbPath });
   };
 
   return (
@@ -95,18 +97,20 @@ const TreeControls: React.FC<TreeControlsProps> = ({
         </div>
       </div>
       {renameModal && (
-        <ChangeNameModal
+        <NameInputModal
+          type={selectedFiles[0].type}
+          currName={selectedFiles[0].name}
           setFilename={onNameChanged}
           onCancel={onRenameModalClosed}
-          tree={selectedFiles[0]}
         />
       )}
-      <ConfirmModal
-        contnet={`You are about to delete ${selectedFiles.length} files.`}
-        isShowing={deleteModal}
-        setIsShowing={setDeleteModal}
-        onConfirm={onDeleteClick}
-      />
+      {deleteModal && (
+        <ConfirmModal
+          contnet={`You are about to delete ${selectedFiles.length} files.`}
+          onCancel={() => setDeleteModal(false)}
+          onConfirm={onDeleteClick}
+        />
+      )}
     </>
   );
 };

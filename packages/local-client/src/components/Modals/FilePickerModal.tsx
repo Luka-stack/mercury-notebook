@@ -1,16 +1,13 @@
 import { useTypedSelector } from '../../hooks/use-typed-selector';
 import Tree from '../TreeStructure/Tree';
 import { useActions } from '../../hooks/use-actions';
+import ModalBase from './ModalBase';
 
 interface FilePickerModalProps {
-  isShowing: boolean;
   setIsShowing: (status: boolean) => void;
 }
 
-const FilePickerModal: React.FC<FilePickerModalProps> = ({
-  isShowing,
-  setIsShowing,
-}) => {
+const FilePickerModal: React.FC<FilePickerModalProps> = ({ setIsShowing }) => {
   const { tree, loading, modalFile, root } = useTypedSelector(
     (state) => state.trees
   );
@@ -45,36 +42,33 @@ const FilePickerModal: React.FC<FilePickerModalProps> = ({
     return <Tree treeData={tree.children} />;
   };
 
+  const footer = (
+    <>
+      <button
+        className="button is-outlined"
+        onClick={handleOpen}
+        disabled={modalFile === ''}
+      >
+        Open
+      </button>
+      <button className="button is-danger is-outlined" onClick={onClose}>
+        Cancel
+      </button>
+      <p className="help">
+        {modalFile === ''
+          ? 'You need to select file!'
+          : `Selected file ${modalFile.replace(root.path, '')}`}
+      </p>
+    </>
+  );
+
   return (
-    <div className={`modal ${isShowing && 'is-active'}`}>
-      <div className="modal-card">
-        <header className="modal-card-head">
-          <button className="delete is-medium" onClick={onClose}></button>
-        </header>
-
-        <section className="modal-card-body" style={{ height: '300px' }}>
-          {renderTree()}
-        </section>
-
-        <footer className="modal-card-foot">
-          <button
-            className="button is-outlined"
-            onClick={handleOpen}
-            disabled={modalFile === ''}
-          >
-            Open
-          </button>
-          <button className="button is-danger is-outlined" onClick={onClose}>
-            Cancel
-          </button>
-          <p className="help">
-            {modalFile === ''
-              ? 'You need to select file!'
-              : `Selected file ${modalFile.replace(root.path, '')}`}
-          </p>
-        </footer>
-      </div>
-    </div>
+    <ModalBase
+      onCancel={onClose}
+      section={renderTree()}
+      sectionStyle={{ height: '300px' }}
+      footer={footer}
+    />
   );
 };
 

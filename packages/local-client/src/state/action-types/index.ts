@@ -48,4 +48,7 @@ export enum ActionType {
   RENAME_FILE = 'rename_file',
   RENAME_FILE_COMPLETE = 'rename_file_complete',
   RENAME_FILE_ERROR = 'rename_file_error',
+
+  APPEND_NOTIFICATION = 'append_notification',
+  REMOVE_NOTIFICATION = 'remove_notification',
 }
