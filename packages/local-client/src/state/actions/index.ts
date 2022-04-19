@@ -104,6 +104,7 @@ export interface ToggleAutoCompileAction {
 
 export interface ToggleAutoSaveAction {
   type: ActionType.TOGGLE_AUTO_SAVE;
+  payload: boolean;
 }
 
 export interface SelectCodeCellAction {

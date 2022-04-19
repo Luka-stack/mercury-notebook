@@ -29,13 +29,13 @@ export default class FileService {
     );
   }
 
-  openFile(fileId: string, socketId: string): void {
+  openFile(fileId: string, socketId: string): boolean {
     if (this._openFiles.has(fileId)) {
-      return;
+      return false;
     }
 
     this._openFiles.set(fileId, socketId);
-    // emit Tree
+    return true;
   }
 
   closeFile(fileId: string): void {
@@ -44,16 +44,15 @@ export default class FileService {
     }
 
     this._openFiles.delete(fileId);
-    // emit Tree
   }
 
-  closedSocket(socketId: string): void {
-    this._openFiles.forEach((v, k) => {
-      if (v === socketId) {
-        this._openFiles.delete(k);
-        return;
-      }
-    });
+  closedSocket(fileId: string, socketId?: string): void {
+    if (socketId) {
+      this._openFiles.set(fileId, socketId);
+      return;
+    }
+
+    this._openFiles.delete(fileId);
   }
 
   async createFolder(dirpath: string): Promise<void> {

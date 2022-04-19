@@ -6,10 +6,12 @@ import { Toast } from '../toast';
 
 interface NotificationStates {
   toasts: Toast[];
+  overwriteModal: boolean;
 }
 
 const initialState: NotificationStates = {
   toasts: [],
+  overwriteModal: false,
 };
 
 const reducer = produce(
@@ -24,6 +26,14 @@ const reducer = produce(
 
       case ActionType.REMOVE_NOTIFICATION:
         state.toasts = state.toasts.filter((t) => t.id !== action.payload);
+        return state;
+
+      case ActionType.SHOW_OVERWRITE_MODAL:
+        state.overwriteModal = true;
+        return state;
+
+      case ActionType.REMOVE_OVERWRITE_MODAL:
+        state.overwriteModal = false;
         return state;
 
       default:

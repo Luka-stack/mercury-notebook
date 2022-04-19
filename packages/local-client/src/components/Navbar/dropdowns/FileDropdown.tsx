@@ -18,8 +18,7 @@ const FileDropdown = () => {
   };
 
   const onSaveClick = () => {
-    const path = windowRouter.getFilePath();
-    saveCells(path);
+    saveCells();
   };
 
   const saveAs = (filename: string) => {

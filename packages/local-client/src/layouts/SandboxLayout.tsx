@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import CellList from '../components/CellList/CellList';
+import OverwriteModal from '../components/Modals/OverwriteModal';
 import FileDropdown from '../components/Navbar/dropdowns/FileDropdown';
 import OptionsDropdown from '../components/Navbar/dropdowns/OptionsDropdown';
 import FileTitle from '../components/Navbar/FileTitle';
@@ -8,7 +9,6 @@ import ToastPortal from '../components/ToastPortal/ToastPortal';
 import { useActions } from '../hooks/use-actions';
 import { useTypedSelector } from '../hooks/use-typed-selector';
 import socket from '../socket-connection';
-import { addNotification } from '../state/action-creators';
 import NotFound from './ErrorPage';
 
 const SandboxLayout = () => {
@@ -18,11 +18,14 @@ const SandboxLayout = () => {
     insertChapterAfter,
     bundleSelectedCell,
     fetchCells,
-    fetchedErrors,
-    forcedUpdate,
+    saveCells,
+    showOverwriteModal,
+    removeOverwriteModal,
+    addNotification,
   } = useActions();
 
   const { selectedCell, error } = useTypedSelector((state) => state.cells);
+  const { overwriteModal } = useTypedSelector((state) => state.notifications);
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -35,10 +38,12 @@ const SandboxLayout = () => {
       updateTree(data);
     });
 
-    socket.on('forcedUpdate', (data) => {
-      addNotification('File has been updated in another tab!', 'error');
-      console.log('forced');
-      // forcedUpdate(data);
+    socket.on('notebookChanged', () => {
+      showOverwriteModal();
+    });
+
+    socket.on('sharedNotebook', () => {
+      addNotification('This notebook is already open!', 'warn');
     });
 
     socket.on('disconnect', () => {
@@ -87,7 +92,21 @@ const SandboxLayout = () => {
         <FileTitle />
       </Navbar>
       <CellList />
-      <ToastPortal autoClose={true} />
+      <ToastPortal autoClose />
+
+      {overwriteModal && (
+        <OverwriteModal
+          onClose={removeOverwriteModal}
+          onReload={() => {
+            fetchCells();
+            removeOverwriteModal();
+          }}
+          onOverwrite={() => {
+            saveCells();
+            removeOverwriteModal();
+          }}
+        />
+      )}
     </div>
   );
 };

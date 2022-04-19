@@ -15,6 +15,8 @@ export const Toast: React.FC<ToastProps> = ({ msg, mode, onClose }) => {
     else return `${base} is-link`;
   }, [mode]);
 
+  console.log(msg);
+
   return (
     <div className={classes} onClick={onClose}>
       <button className="delete"></button>

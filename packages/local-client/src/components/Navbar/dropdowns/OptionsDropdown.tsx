@@ -20,7 +20,7 @@ const OptionsDropdown = () => {
           <DropdownItem
             label={`${autoSave ? 'Disable' : 'Enable'} auto save`}
             desc="Disable/Enable auto saving file after change"
-            onClick={toggleAutoSave}
+            onClick={() => toggleAutoSave(!autoSave)}
             active={autoSave}
           />
           <DropdownItem

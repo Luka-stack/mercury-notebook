@@ -179,7 +179,7 @@ const reducer = produce(
         return state;
 
       case ActionType.TOGGLE_AUTO_SAVE:
-        state.autoSave = !state.autoSave;
+        state.autoSave = action.payload;
         return state;
 
       case ActionType.SELECT_CODE_CELL:

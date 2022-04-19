@@ -29,7 +29,7 @@ export class Gateway {
         ...this.fileService.scan(),
       });
 
-      socket.on('disconnect', () => this.onDisconnect(socket.id));
+      socket.on('disconnect', () => this.onDisconnect(socket));
 
       socket.on('fetchCells', (payload, ack) =>
         this.onFetchCells(socket, payload, ack)
@@ -59,8 +59,15 @@ export class Gateway {
     });
   }
 
-  onDisconnect(socketId: string): void {
-    this.fileService.closedSocket(socketId);
+  async onDisconnect(socket: Socket): Promise<void> {
+    const clients = await this.ioServer.in(socket.data.file).fetchSockets();
+    let newClient;
+
+    if (clients.length) {
+      newClient = clients[0].id;
+    }
+
+    this.fileService.closedSocket(socket.data.file, newClient);
     this.emitTree();
   }
 
@@ -106,7 +113,7 @@ export class Gateway {
       );
 
       if (!isNew) {
-        socket.broadcast.emit('forcedUpdate', payload.data);
+        socket.broadcast.to(id).emit('notebookChanged');
       }
 
       ack(undefined);
@@ -140,7 +147,12 @@ export class Gateway {
       );
 
       socket.join(id);
-      this.fileService.openFile(id, socket.id);
+      socket.data.file = id;
+      const open = this.fileService.openFile(id, socket.id);
+
+      if (!open) {
+        socket.emit('sharedNotebook');
+      }
 
       ack(undefined, json);
 

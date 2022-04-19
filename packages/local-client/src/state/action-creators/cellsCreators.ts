@@ -108,7 +108,7 @@ export const forcedUpdate = (data: {
   };
 };
 
-export const saveCells = (path: string) => {
+export const saveCells = () => {
   return (
     dispatch: Dispatch<NotificationsAction>,
     getState: () => RootState
@@ -118,6 +118,7 @@ export const saveCells = (path: string) => {
     } = getState();
 
     try {
+      const path = windowRouter.getFilePath();
       const payload = createNotebookPayload(order, chapters, data);
 
       socket.emit(
@@ -194,9 +195,10 @@ export const toggleAutoCompile = (): ToggleAutoCompileAction => {
   };
 };
 
-export const toggleAutoSave = (): ToggleAutoSaveAction => {
+export const toggleAutoSave = (flag: boolean): ToggleAutoSaveAction => {
   return {
     type: ActionType.TOGGLE_AUTO_SAVE,
+    payload: flag,
   };
 };
 

@@ -51,4 +51,7 @@ export enum ActionType {
 
   APPEND_NOTIFICATION = 'append_notification',
   REMOVE_NOTIFICATION = 'remove_notification',
+
+  SHOW_OVERWRITE_MODAL = 'show_overwrite_modal',
+  REMOVE_OVERWRITE_MODAL = 'remove_overwrite_modal',
 }

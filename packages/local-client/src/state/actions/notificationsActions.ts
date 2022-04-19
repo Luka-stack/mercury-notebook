@@ -11,4 +11,16 @@ export interface RemoveNotificationAction {
   payload: string;
 }
 
-export type Action = AppendNotificationAction | RemoveNotificationAction;
+export interface ShowOverwriteModalAction {
+  type: ActionType.SHOW_OVERWRITE_MODAL;
+}
+
+export interface RemoveOverwriteModalAction {
+  type: ActionType.REMOVE_OVERWRITE_MODAL;
+}
+
+export type Action =
+  | AppendNotificationAction
+  | RemoveNotificationAction
+  | ShowOverwriteModalAction
+  | RemoveOverwriteModalAction;
