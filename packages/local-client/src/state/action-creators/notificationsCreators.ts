@@ -4,7 +4,6 @@ import {
   AppendNotificationAction,
   RemoveNotificationAction,
   RemoveOverwriteModalAction,
-  ShowOverwriteModalAction,
 } from '../actions/notificationsActions';
 import { Action as NotificationsAction } from '../actions/notificationsActions';
 import { Action as CellsAction } from '../actions/index';
@@ -15,7 +14,6 @@ export const addNotification = (
   msg: string,
   mode: ToastTypes
 ): AppendNotificationAction => {
-  console.log(msg);
   return {
     type: ActionType.APPEND_NOTIFICATION,
     payload: {

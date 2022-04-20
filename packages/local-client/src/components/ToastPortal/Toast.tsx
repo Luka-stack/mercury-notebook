@@ -1,3 +1,5 @@
+import './Toast.css';
+
 import { useMemo } from 'react';
 import { ToastTypes } from '../../state/toast';
 
@@ -10,12 +12,10 @@ interface ToastProps {
 export const Toast: React.FC<ToastProps> = ({ msg, mode, onClose }) => {
   const classes = useMemo(() => {
     let base = 'notification';
-    if (mode === 'error') return `${base} is-danger`;
-    else if (mode === 'warn') return `${base} is-warning`;
-    else return `${base} is-link`;
+    if (mode === 'error') return `${base} toast-error`;
+    else if (mode === 'warn') return `${base} toast-warn`;
+    else return `${base} toast-info`;
   }, [mode]);
-
-  console.log(msg);
 
   return (
     <div className={classes} onClick={onClose}>

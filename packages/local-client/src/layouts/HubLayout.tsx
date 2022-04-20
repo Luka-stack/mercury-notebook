@@ -20,12 +20,6 @@ const HubLayout = () => {
   const { updateTree, addNotification } = useActions();
 
   useEffect(() => {
-    socket.on('connect', () => {
-      console.group('[Socket] :: connect');
-      console.log('Socket Connected');
-      console.groupEnd();
-    });
-
     socket.on('tree', (data) => {
       updateTree(data);
     });
@@ -42,13 +36,8 @@ const HubLayout = () => {
       addNotification(message, 'error');
     });
 
-    socket.on('disconnect', () => {
-      console.group('[Socket] :: disconnect');
-      console.log('Socket Disconnected');
-      console.groupEnd();
-    });
-
     socket.connect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -65,7 +54,7 @@ const HubLayout = () => {
         selectedFiles={selectedFiles}
         setSelectedFiles={setSelectedFiles}
       />
-      <ToastPortal autoClose={true} />
+      <ToastPortal autoClose={true} autoCloseTime={10000} />
     </>
   );
 };

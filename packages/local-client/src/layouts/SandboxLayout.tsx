@@ -28,12 +28,6 @@ const SandboxLayout = () => {
   const { overwriteModal } = useTypedSelector((state) => state.notifications);
 
   useEffect(() => {
-    socket.on('connect', () => {
-      console.group('[Socket] :: connect');
-      console.log('Socket Connected');
-      console.groupEnd();
-    });
-
     socket.on('tree', (data) => {
       updateTree(data);
     });
@@ -46,12 +40,6 @@ const SandboxLayout = () => {
       addNotification('This notebook is already open!', 'warn');
     });
 
-    socket.on('disconnect', () => {
-      console.group('[Socket] :: disconnect');
-      console.log('Socket Disconnected');
-      console.groupEnd();
-    });
-
     socket.connect();
     fetchCells();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,6 +49,7 @@ const SandboxLayout = () => {
     document.addEventListener(
       'keydown',
       (event) => {
+        console.log('KeyDown');
         if (selectedCell) {
           if (event.key === 'Enter' && event.altKey) {
             event.preventDefault();

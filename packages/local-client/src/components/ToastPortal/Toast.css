@@ -1,0 +1,17 @@
+.notification {
+    cursor: pointer;
+    min-width: 350px;
+    z-index: 9999;
+}
+
+.toast-info {
+    background-color: #4673a3;
+}
+
+.toast-error {
+    background-color: #9a2013;
+}
+
+.toast-warn {
+    background-color: #b98d0b;
+}

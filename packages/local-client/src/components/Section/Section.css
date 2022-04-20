@@ -4,7 +4,7 @@
 }
 
 .card.active-section {
-  border-color: #3298dc;
+  border-color: #375a7f;
 }
 
 .card-header {
@@ -29,7 +29,7 @@
 }
 
 .section-button:hover {
-  color: #3298dc;
+  color: #375a7f;
   border-color: transparent;
   background-color: #282f2f;
 }

@@ -45,43 +45,44 @@ const Section: React.FC<SectionProps> = ({ id, description, children }) => {
   };
 
   return (
-    <div className={`card ${selectedSection === id ? 'active-section' : ''}`}>
-      <header className="card-header" onClick={() => setIsOpen(!isOpen)}>
-        <button className="button section-button">
-          <span className="icon">
-            <i className={`fas ${isOpen ? 'fa-minus' : 'fa-plus'}`}></i>
-          </span>
-        </button>
-        <button
-          className="button section-button"
-          onClick={(e) => onMoveClick(e, id, 'up')}
-        >
-          <span className="icon">
-            <i className="fas fa-arrow-up"></i>
-          </span>
-        </button>
-        <button
-          className="button section-button"
-          onClick={(e) => onMoveClick(e, id, 'down')}
-        >
-          <span className="icon">
-            <i className="fas fa-arrow-down"></i>
-          </span>
-        </button>
-        <button
-          className="button section-button close-button"
-          onClick={onDeleteClick}
-        >
-          <span className="icon">
-            <i className="fas fa-times"></i>
-          </span>
-        </button>
-      </header>
-      <div className="card-content">
-        {description}
-        <div style={{ display: isOpen ? 'block' : 'none' }}>{children}</div>
+    <>
+      <div className={`card ${selectedSection === id ? 'active-section' : ''}`}>
+        <header className="card-header" onClick={() => setIsOpen(!isOpen)}>
+          <button className="button section-button">
+            <span className="icon">
+              <i className={`fas ${isOpen ? 'fa-minus' : 'fa-plus'}`}></i>
+            </span>
+          </button>
+          <button
+            className="button section-button"
+            onClick={(e) => onMoveClick(e, id, 'up')}
+          >
+            <span className="icon">
+              <i className="fas fa-arrow-up"></i>
+            </span>
+          </button>
+          <button
+            className="button section-button"
+            onClick={(e) => onMoveClick(e, id, 'down')}
+          >
+            <span className="icon">
+              <i className="fas fa-arrow-down"></i>
+            </span>
+          </button>
+          <button
+            className="button section-button close-button"
+            onClick={onDeleteClick}
+          >
+            <span className="icon">
+              <i className="fas fa-times"></i>
+            </span>
+          </button>
+        </header>
+        <div className="card-content">
+          {description}
+          <div style={{ display: isOpen ? 'block' : 'none' }}>{children}</div>
+        </div>
       </div>
-
       {showModal && (
         <ConfirmModal
           contnet="You are about to delete chapter with multiple cells."
@@ -89,7 +90,7 @@ const Section: React.FC<SectionProps> = ({ id, description, children }) => {
           onConfirm={onConfirmModal}
         />
       )}
-    </div>
+    </>
   );
 };
 

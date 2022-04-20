@@ -24,6 +24,14 @@ const CellListItem: React.FC<CellListItemProps> = ({
 
   const { selectCodeCell } = useActions();
 
+  const onCellClicked = (cell: Cell) => {
+    if (selectedCell && selectedCell.id === cell.id) {
+      return;
+    }
+
+    selectCodeCell(cell);
+  };
+
   const activeCellStyle = cell.id === selectedCell?.id ? 'active-cell' : '';
 
   const renderTextEditor = (
@@ -54,7 +62,7 @@ const CellListItem: React.FC<CellListItemProps> = ({
   return (
     <div
       className={`cell-list-item ${activeCellStyle}`}
-      onClick={() => selectCodeCell(cell)}
+      onClick={() => onCellClicked(cell)}
     >
       {cell.type === 'code' ? (
         <>

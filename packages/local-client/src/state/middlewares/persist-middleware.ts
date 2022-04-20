@@ -24,6 +24,9 @@ export const persistMiddleware = ({
           ActionType.UPDATE_CELL,
           ActionType.INSERT_CELL_AFTER,
           ActionType.DELETE_CELL,
+          ActionType.INSERT_CHAPTER_AFTER,
+          ActionType.MOVE_CHAPTER,
+          ActionType.DELETE_CHAPTER,
         ].includes(action.type)
       ) {
         if (timer) {
