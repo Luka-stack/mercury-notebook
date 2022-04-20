@@ -14,11 +14,7 @@ export class Gateway {
     private readonly fileService: FileService,
     private readonly notebookService: NotebookService
   ) {
-    this.ioServer = new Server(server, {
-      cors: {
-        origin: '*',
-      },
-    });
+    this.ioServer = new Server(server);
 
     this.initListeners();
   }

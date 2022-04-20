@@ -6,13 +6,13 @@ const isProduction = process.env.NODE_ENV === 'production';
 export const serveCommand = new Command()
   .command('serve')
   .description('Open a Mercury Notebook Hub')
-  .option('-p, --port <number>', 'port to run server on', '4005')
+  // .option('-p, --port <number>', 'port to run server on', '4005')
   .action(async (options: { port: string }) => {
     try {
       const dir = process.cwd();
-      await serve(+options.port, dir, !isProduction);
+      await serve(dir, !isProduction);
       console.log(
-        `To use Mercury Notebook hub navigate to http://localhost:${options.port}.`
+        `To use Mercury Notebook hub navigate to http://localhost:7777.`
       );
     } catch (err: any) {
       if (err.code === 'EADDRINUSE') {

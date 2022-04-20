@@ -62,7 +62,6 @@ export default class FileService {
 
       await mkdir(fullPath);
     } catch (err: unknown) {
-      console.log(err);
       throw "Couldn't create folder";
     }
   }
@@ -90,7 +89,6 @@ export default class FileService {
         await rm(tree.path, { recursive: true, force: true });
       }
     } catch (err: unknown) {
-      console.log(err);
       throw "Couldn't delete all files";
     }
   }
