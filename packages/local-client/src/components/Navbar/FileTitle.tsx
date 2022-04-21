@@ -19,7 +19,7 @@ const FileTitle = () => {
   const onNameChanged = (filename: string) => {
     const fullPath = path + windowRouter.getFilePath();
 
-    renameFile(fullPath, fullPath.replace(`${name}.js`, filename), () => {
+    renameFile(fullPath, fullPath.replace(`${name}.jsnb`, filename), () => {
       setIsShowing(false);
       windowRouter.updateRoute(name, filename);
       setName(filename);
@@ -61,11 +61,6 @@ const FileTitle = () => {
           setFilename={onNameChanged}
           onCancel={onCancel}
         />
-        // <ChangeNameModal
-        //   setFilename={onNameChanged}
-        //   onCancel={onCancel}
-        //   tree={{ type: 'file', path, name: `${name}.js` }}
-        // />
       )}
     </>
   );

@@ -32,7 +32,10 @@ export default class NotebookService {
   }
 
   async createNotebook(dirpath: string): Promise<string> {
-    const filename = `${NOTEBOOK_NAME_TEMPLATE}-${uuidv4().substring(0, 8)}.js`;
+    const filename = `${NOTEBOOK_NAME_TEMPLATE}-${uuidv4().substring(
+      0,
+      8
+    )}.jsnb`;
     const fullPath = path.join(this.rootPath, dirpath, filename);
 
     try {

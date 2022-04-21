@@ -52,7 +52,7 @@ var FileService = /** @class */ (function () {
         this.rootPath = rootPath;
         this._openFiles = new Map();
         this._scanOptions = {
-            extensions: /\.js$/,
+            extensions: /\.jsnb$/,
             attributes: ['type', 'mtime'],
         };
         this.idCallback = function (item, path) {

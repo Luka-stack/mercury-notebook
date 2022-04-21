@@ -14,7 +14,7 @@ const DIR_NAME_TEMPLATE = 'Folder';
 export default class FileService {
   private _openFiles: Map<string, string> = new Map();
   private _scanOptions: DirectoryTreeOptions = {
-    extensions: /\.js$/,
+    extensions: /\.jsnb$/,
     attributes: ['type', 'mtime'],
   };
 

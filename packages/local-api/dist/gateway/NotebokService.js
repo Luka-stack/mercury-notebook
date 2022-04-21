@@ -86,7 +86,7 @@ var NotebookService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        filename = NOTEBOOK_NAME_TEMPLATE + "-" + (0, uuid_1.v4)().substring(0, 8) + ".js";
+                        filename = NOTEBOOK_NAME_TEMPLATE + "-" + (0, uuid_1.v4)().substring(0, 8) + ".jsnb";
                         fullPath = path_1.default.join(this.rootPath, dirpath, filename);
                         _a.label = 1;
                     case 1:

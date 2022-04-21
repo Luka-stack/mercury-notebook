@@ -21,7 +21,10 @@ export namespace windowRouter {
   };
 
   export const getCurrentFilename = (): string => {
-    return window.location.pathname.split('/').splice(-1)[0].replace('.js', '');
+    return window.location.pathname
+      .split('/')
+      .splice(-1)[0]
+      .replace('.jsnb', '');
   };
 
   export const newWindow = (url: string) => {

@@ -15,7 +15,7 @@ const ChangeNameModal: React.FC<ChangeNameModalProps> = ({
   setFilename,
   onCancel,
 }) => {
-  const [value, setValue] = useState<string>(currName.replace('.js', ''));
+  const [value, setValue] = useState<string>(currName.replace('.jsnb', ''));
   const [error, setError] = useState<string>('');
 
   const labelName = type === 'file' ? 'Notebook' : 'Directory';
@@ -27,7 +27,7 @@ const ChangeNameModal: React.FC<ChangeNameModalProps> = ({
         'Filename can contains letters, digits, spaces, hyphen, underscore and parenthesis'
       );
     } else {
-      setFilename(type === 'file' ? `${value}.js` : value);
+      setFilename(type === 'file' ? `${value}.jsnb` : value);
     }
   };
 
