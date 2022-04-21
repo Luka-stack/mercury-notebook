@@ -11,7 +11,7 @@ var http_1 = require("http");
 var FileService_1 = __importDefault(require("./gateway/FileService"));
 var NotebokService_1 = __importDefault(require("./gateway/NotebokService"));
 var Gateway_1 = require("./gateway/Gateway");
-var serve = function (dir, useProxy) {
+var serve = function (port, dir, useProxy) {
     var app = (0, express_1.default)();
     if (useProxy) {
         app.use((0, http_proxy_middleware_1.createProxyMiddleware)({
@@ -29,29 +29,7 @@ var serve = function (dir, useProxy) {
     var notebookService = new NotebokService_1.default(dir);
     var gateway = new Gateway_1.Gateway(server, fileService, notebookService);
     return new Promise(function (resolve, reject) {
-        server.listen(7777, resolve).on('error', reject);
+        server.listen(port, resolve).on('error', reject);
     });
 };
 exports.serve = serve;
-// const app = express();
-// app.use(
-//   cors({
-//     origin: 'http://localhost:3000',
-//   })
-// );
-// app.use(
-//   createProxyMiddleware({
-//     target: 'http://localhost:3000',
-//     ws: true,
-//     logLevel: 'debug',
-//   })
-// );
-// const server = createServer(app);
-// const fileService = new FileService('D:\\Programming\\projects\\Notebooks');
-// const notebookService = new NotebookService(
-//   'D:\\Programming\\projects\\Notebooks'
-// );
-// const gateway = new Gateway(server, fileService, notebookService);
-// server.listen(4005, async () => {
-//   console.log('Server Running');
-// });

@@ -1,6 +1,5 @@
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = 'http://localhost:7777';
-const socket = io(SOCKET_URL, { autoConnect: false });
+const socket = io({ autoConnect: false });
 
 export default socket;

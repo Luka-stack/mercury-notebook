@@ -6,7 +6,7 @@ import FileService from './gateway/FileService';
 import NotebookService from './gateway/NotebokService';
 import { Gateway } from './gateway/Gateway';
 
-export const serve = (dir: string, useProxy: boolean) => {
+export const serve = (port: number, dir: string, useProxy: boolean) => {
   const app = express();
 
   if (useProxy) {
@@ -31,32 +31,6 @@ export const serve = (dir: string, useProxy: boolean) => {
   const gateway = new Gateway(server, fileService, notebookService);
 
   return new Promise<void>((resolve, reject) => {
-    server.listen(7777, resolve).on('error', reject);
+    server.listen(port, resolve).on('error', reject);
   });
 };
-
-// const app = express();
-// app.use(
-//   cors({
-//     origin: 'http://localhost:3000',
-//   })
-// );
-// app.use(
-//   createProxyMiddleware({
-//     target: 'http://localhost:3000',
-//     ws: true,
-//     logLevel: 'debug',
-//   })
-// );
-
-// const server = createServer(app);
-// const fileService = new FileService('D:\\Programming\\projects\\Notebooks');
-// const notebookService = new NotebookService(
-//   'D:\\Programming\\projects\\Notebooks'
-// );
-
-// const gateway = new Gateway(server, fileService, notebookService);
-
-// server.listen(4005, async () => {
-//   console.log('Server Running');
-// });

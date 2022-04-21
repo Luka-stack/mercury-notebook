@@ -43,7 +43,7 @@ var isProduction = process.env.NODE_ENV === 'production';
 exports.serveCommand = new commander_1.Command()
     .command('serve')
     .description('Open a Mercury Notebook Hub')
-    // .option('-p, --port <number>', 'port to run server on', '4005')
+    .option('-p, --port <number>', 'port to run server on', '7777')
     .action(function (options) { return __awaiter(void 0, void 0, void 0, function () {
     var dir, err_1;
     return __generator(this, function (_a) {
@@ -51,10 +51,10 @@ exports.serveCommand = new commander_1.Command()
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 dir = process.cwd();
-                return [4 /*yield*/, (0, local_api_1.serve)(dir, !isProduction)];
+                return [4 /*yield*/, (0, local_api_1.serve)(+options.port, dir, !isProduction)];
             case 1:
                 _a.sent();
-                console.log("To use Mercury Notebook hub navigate to http://localhost:7777.");
+                console.log("To use Mercury Notebook hub navigate to http://localhost:" + options.port + ".");
                 return [3 /*break*/, 3];
             case 2:
                 err_1 = _a.sent();
