@@ -1,7 +1,7 @@
 {
   "name": "mercury-notebook",
   "version": "3.0.1",
-  "description": "",
+  "description": "A interactive, web-based notebook environment for javascript.",
   "bin": "dist/index.js",
   "publishConfig": {
     "access": "public"
@@ -9,13 +9,17 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Luka-stack/mercury-notebook.git"
+  },
   "scripts": {
     "start": "tsc --watch --preserveWatchOutput",
     "prepublishOnly": "esbuild src/index.ts --platform=node --outfile=dist/index.js --bundle --minify --define:process.env.NODE_ENV='production'"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "author": "Lukasz Rafa  <lkr.rafa@gmail.com> (https://github.com/Luka-stack)",
   "dependencies": {
     "@mercury-notebook/local-api": "^3.0.1"
   },
