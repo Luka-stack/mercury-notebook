@@ -1,19 +1,18 @@
-import path from 'path';
-import { Command } from 'commander';
 import { serve } from '@mercury-notebook/local-api';
+import { Command } from 'commander';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
 export const serveCommand = new Command()
-  .command('serve [filename]')
-  .description('Open a file for editing')
-  .option('-p, --port <number>', 'port to run server on', '4005')
-  .action(async (filename = 'notebook.js', options: { port: string }) => {
+  .command('serve')
+  .description('Open a Mercury Notebook Hub')
+  .option('-p, --port <number>', 'port to run server on', '7777')
+  .action(async (options: { port: string }) => {
     try {
-      const dir = path.join(process.cwd(), path.dirname(filename));
-      await serve(+options.port, path.basename(filename), dir, !isProduction);
+      const dir = process.cwd();
+      await serve(+options.port, dir, !isProduction);
       console.log(
-        `Opened ${filename}. Navigate to http://localhost:${options.port} to edit the file`
+        `To use Mercury Notebook hub navigate to http://localhost:${options.port}.`
       );
     } catch (err: any) {
       if (err.code === 'EADDRINUSE') {

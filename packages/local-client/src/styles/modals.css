@@ -1,0 +1,46 @@
+.modal.is-active {
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+.modal .modal-card .modal-card-head {
+  padding: 6px;
+  justify-content: flex-end;
+}
+
+.modal .help {
+  display: inline-block;
+  word-break: break-all;
+}
+
+.modal progress {
+  margin-top: 120px;
+}
+
+.shortcuts li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.shortcuts li div span {
+  margin-left: 8px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, 0.9);
+}

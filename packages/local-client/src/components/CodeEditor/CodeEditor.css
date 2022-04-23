@@ -4,7 +4,9 @@
   width: calc(100% - 10px);
 }
 
-.editor-wrapper .button-format {
+.editor-wrapper .editor-controls {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: 5px;
   right: 5px;
@@ -13,6 +15,6 @@
   transition: opacity 0.3s;
 }
 
-.editor-wrapper:hover .button-format {
+.editor-wrapper:hover .editor-controls {
   opacity: 1;
 }

@@ -1,46 +1,40 @@
+import ModalBase from './ModalBase';
+
 interface ConfirmModalProps {
-  title: string;
   contnet: string;
   confirmLabel?: string;
   cancelLabel?: string;
 
-  isShowing: boolean;
-  setIsShowing: (status: boolean) => void;
+  onCancel: () => void;
   onConfirm: () => void;
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
-  title,
   contnet,
   confirmLabel = 'Proceed',
   cancelLabel = 'Cancel',
-  isShowing,
-  setIsShowing,
+  onCancel,
   onConfirm,
 }) => {
+  const rernderSection = <>{contnet}</>;
+
+  const renderFooter = (
+    <>
+      <button className="button is-primary" onClick={onConfirm}>
+        {confirmLabel}
+      </button>
+      <button className="button" onClick={onCancel}>
+        {cancelLabel}
+      </button>
+    </>
+  );
+
   return (
-    <div className={`modal ${isShowing && 'is-active'}`} id="myModal">
-      <div className="modal-card">
-        <header className="modal-card-head">
-          <p className="modal-card-title">{title}</p>
-          <button
-            className="delete"
-            onClick={() => setIsShowing(false)}
-          ></button>
-        </header>
-
-        <section className="modal-card-body">{contnet}</section>
-
-        <footer className="modal-card-foot">
-          <button className="button is-primary" onClick={onConfirm}>
-            {confirmLabel}
-          </button>
-          <button className="button" onClick={() => setIsShowing(false)}>
-            {cancelLabel}
-          </button>
-        </footer>
-      </div>
-    </div>
+    <ModalBase
+      onCancel={onCancel}
+      section={rernderSection}
+      footer={renderFooter}
+    />
   );
 };
 

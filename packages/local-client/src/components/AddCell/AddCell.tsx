@@ -1,4 +1,5 @@
 import './AddCell.css';
+
 import { useActions } from '../../hooks/use-actions';
 
 interface AddCellProps {

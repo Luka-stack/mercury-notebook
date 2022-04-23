@@ -6,10 +6,22 @@
   transition: opacity 0.3s;
 }
 
+.action-bar button {
+  color: white;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.action-bar button:hover {
+  color: white;
+  border-color: transparent;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
 .action-bar:hover {
   opacity: 1;
 }
 
-.is-primary.close-button:hover {
-  background-color: #e74c3c;
+.action-bar .close-button:hover {
+  color: #e74c3c;
 }

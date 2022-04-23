@@ -1,5 +1,5 @@
+import './Syntax.css';
 import './CodeEditor.css';
-import './syntax.css';
 
 import { useRef } from 'react';
 import parser from 'prettier/parser-babel';
@@ -11,9 +11,14 @@ import MonacoEditor, { EditorDidMount } from '@monaco-editor/react';
 interface CodeEditorProps {
   initialValue: string;
   onChange(value: string): void;
+  runBundle(): void;
 }
 
-const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
+const CodeEditor: React.FC<CodeEditorProps> = ({
+  initialValue,
+  onChange,
+  runBundle,
+}) => {
   const editorRef = useRef<any>();
 
   const onEditorDidMount: EditorDidMount = (getValue, monacoEditor) => {
@@ -56,12 +61,21 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
 
   return (
     <div className="editor-wrapper">
-      <button
-        className="button button-format is-primary is-small"
-        onClick={onFormatClick}
-      >
-        Format
-      </button>
+      <div className="editor-controls">
+        <button
+          className="button button-format is-primary is-small"
+          onClick={onFormatClick}
+        >
+          Format
+        </button>
+        <button
+          className="button button-format is-primary is-small"
+          style={{ marginTop: '4px' }}
+          onClick={runBundle}
+        >
+          Run
+        </button>
+      </div>
       <MonacoEditor
         editorDidMount={onEditorDidMount}
         value={initialValue}

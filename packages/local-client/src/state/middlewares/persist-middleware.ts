@@ -1,8 +1,8 @@
-import { Dispatch } from "redux";
-import { Action } from "../actions";
-import { ActionType } from "../action-types";
-import { saveCells } from "../action-creators";
-import { RootState } from "../reducers";
+import { Dispatch } from 'redux';
+import { ActionType } from '../action-types';
+import { saveCells } from '../action-creators';
+import { RootState } from '../reducers';
+import { Action } from '../actions/notificationsActions';
 
 export const persistMiddleware = ({
   dispatch,
@@ -18,11 +18,15 @@ export const persistMiddleware = ({
       next(action);
 
       if (
+        getState().cells.autoSave &&
         [
           ActionType.MOVE_CELL,
           ActionType.UPDATE_CELL,
           ActionType.INSERT_CELL_AFTER,
           ActionType.DELETE_CELL,
+          ActionType.INSERT_CHAPTER_AFTER,
+          ActionType.MOVE_CHAPTER,
+          ActionType.DELETE_CHAPTER,
         ].includes(action.type)
       ) {
         if (timer) {

@@ -97,6 +97,20 @@ export interface SaveCellsErrorAction {
   payload: string;
 }
 
+export interface ToggleAutoCompileAction {
+  type: ActionType.TOGGLE_AUTO_COMPILE;
+}
+
+export interface ToggleAutoSaveAction {
+  type: ActionType.TOGGLE_AUTO_SAVE;
+  payload: boolean;
+}
+
+export interface SelectCodeCellAction {
+  type: ActionType.SELECT_CODE_CELL;
+  payload: Cell;
+}
+
 export type Action =
   | MoveChapterAction
   | MoveCellAction
@@ -110,4 +124,7 @@ export type Action =
   | FetchCellsAction
   | FetchCellsCompleteAction
   | FetchCellsErrorAction
-  | SaveCellsErrorAction;
+  | SaveCellsErrorAction
+  | ToggleAutoSaveAction
+  | ToggleAutoCompileAction
+  | SelectCodeCellAction;

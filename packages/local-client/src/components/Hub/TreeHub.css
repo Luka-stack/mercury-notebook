@@ -1,0 +1,112 @@
+.tree--hub.container {
+  display: flex;
+  justify-content: center;
+  padding: 25px;
+}
+
+.tree--hub.load-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 200px;
+}
+
+.tree--hub.table {
+  width: 90%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-collapse: separate;
+}
+
+.tree--hub .table tbody tr:hover {
+  background-color: #375a7f;
+  color: #fff;
+}
+
+.tree--hub .table tbody tr:hover .link {
+  color: #fff;
+}
+
+.tree--hub .table .link {
+  color: #1abc9c;
+  cursor: pointer;
+}
+
+.tree--hub .order-icon {
+  margin-left: 8px;
+  font-size: 1em;
+}
+
+.tree--hub .italic {
+  font-style: italic;
+  color: #5080b3;
+}
+
+.tree--hub .used {
+  color: #f1b70e;
+}
+
+.tree--hub .breadcrumb ul li u {
+  align-items: center;
+  color: #1abc9c;
+  padding: 0 0.75em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.tree--hub .breadcrumb ul li:last-child u {
+  color: #fff;
+  pointer-events: none;
+}
+
+.tag.dobule-badge-left {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.tag.double-badge-right {
+  background-color: #1f2424;
+}
+
+.cst-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.cst-dropdown-content {
+  display: none;
+  width: 100%;
+  position: absolute;
+  background-color: #282f2f;
+  border-radius: 0.4em;
+  box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+    0 0 0 1px rgb(10 10 10 / 2%);
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.cst-dropdown:hover .cst-dropdown-content {
+  display: block;
+}
+
+.cst-dropdown-item {
+  text-align: left;
+  white-space: nowrap;
+  width: 100%;
+  color: #fff;
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  position: relative;
+  cursor: pointer;
+  font-style: normal;
+  text-decoration: none;
+  font-weight: normal;
+  transition: all 200ms ease;
+  padding: 0.2em 0.5em;
+}
+
+.cst-dropdown-item:hover {
+  background-color: #1abc9c;
+  color: #fff;
+}

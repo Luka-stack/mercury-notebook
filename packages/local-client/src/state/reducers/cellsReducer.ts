@@ -10,6 +10,9 @@ interface CellsState {
   order: string[];
   chapters: { [key: string]: Chapter };
   data: { [key: string]: Cell };
+  autoCompile: boolean;
+  autoSave: boolean;
+  selectedCell: Cell | null;
 }
 
 const initialState: CellsState = {
@@ -18,6 +21,9 @@ const initialState: CellsState = {
   order: [],
   chapters: {},
   data: {},
+  autoCompile: true,
+  autoSave: true,
+  selectedCell: null,
 };
 
 const reducer = produce(
@@ -33,8 +39,6 @@ const reducer = produce(
         return state;
 
       case ActionType.FETCH_CELLS_COMPLETE:
-        console.log(action.payload);
-
         state.order = action.payload.chapters.map((chapter) => chapter.id);
 
         state.chapters = action.payload.chapters.reduce((acc, chapter) => {
@@ -168,6 +172,18 @@ const reducer = produce(
           );
         }
 
+        return state;
+
+      case ActionType.TOGGLE_AUTO_COMPILE:
+        state.autoCompile = !state.autoCompile;
+        return state;
+
+      case ActionType.TOGGLE_AUTO_SAVE:
+        state.autoSave = action.payload;
+        return state;
+
+      case ActionType.SELECT_CODE_CELL:
+        state.selectedCell = action.payload;
         return state;
 
       default:

@@ -1,6 +1,6 @@
 import './CellList.css';
 
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 
 import { Cell } from '../../state';
 import AddCell from '../AddCell/AddCell';
@@ -8,7 +8,6 @@ import Section from '../Section/Section';
 import AddSection from '../AddSection/AddSection';
 import CellListItem from './CellListItem/CellListItem';
 import { useTypedSelector } from '../../hooks/use-typed-selector';
-import { useActions } from '../../hooks/use-actions';
 import { Chapter } from '../../state/chapter';
 
 const CellList: React.FC = () => {
@@ -25,13 +24,6 @@ const CellList: React.FC = () => {
 
     return [cellsData, chapters];
   });
-
-  const { fetchCells } = useActions();
-
-  useEffect(() => {
-    fetchCells();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const renderCells = (sectionId: string) =>
     cells.get(sectionId)?.map((cell) => (

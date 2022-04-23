@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import ConfirmModal from '../Modals/ConfirmModal';
 import { useActions } from '../../hooks/use-actions';
 import { Direction } from '../../state/actions';
+import { useTypedSelector } from '../../hooks/use-typed-selector';
 
 interface SectionProps {
   id: string;
@@ -13,6 +14,10 @@ interface SectionProps {
 const Section: React.FC<SectionProps> = ({ id, description, children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);
+
+  const selectedSection = useTypedSelector(
+    (state) => state.cells.selectedCell?.chapterId
+  );
 
   const { deleteChapter, moveChapter } = useActions();
 
@@ -40,51 +45,52 @@ const Section: React.FC<SectionProps> = ({ id, description, children }) => {
   };
 
   return (
-    <div className="card">
-      <header className="card-header" onClick={() => setIsOpen(!isOpen)}>
-        <button className="button section-button">
-          <span className="icon">
-            <i className={`fas ${isOpen ? 'fa-minus' : 'fa-plus'}`}></i>
-          </span>
-        </button>
-        <button
-          className="button section-button"
-          onClick={(e) => onMoveClick(e, id, 'up')}
-        >
-          <span className="icon">
-            <i className="fas fa-arrow-up"></i>
-          </span>
-        </button>
-        <button
-          className="button section-button"
-          onClick={(e) => onMoveClick(e, id, 'down')}
-        >
-          <span className="icon">
-            <i className="fas fa-arrow-down"></i>
-          </span>
-        </button>
-        <button
-          className="button section-button close-button"
-          onClick={onDeleteClick}
-        >
-          <span className="icon">
-            <i className="fas fa-times"></i>
-          </span>
-        </button>
-      </header>
-      <div className="card-content">
-        {description}
-        <div style={{ display: isOpen ? 'block' : 'none' }}>{children}</div>
+    <>
+      <div className={`card ${selectedSection === id ? 'active-section' : ''}`}>
+        <header className="card-header" onClick={() => setIsOpen(!isOpen)}>
+          <button className="button section-button">
+            <span className="icon">
+              <i className={`fas ${isOpen ? 'fa-minus' : 'fa-plus'}`}></i>
+            </span>
+          </button>
+          <button
+            className="button section-button"
+            onClick={(e) => onMoveClick(e, id, 'up')}
+          >
+            <span className="icon">
+              <i className="fas fa-arrow-up"></i>
+            </span>
+          </button>
+          <button
+            className="button section-button"
+            onClick={(e) => onMoveClick(e, id, 'down')}
+          >
+            <span className="icon">
+              <i className="fas fa-arrow-down"></i>
+            </span>
+          </button>
+          <button
+            className="button section-button close-button"
+            onClick={onDeleteClick}
+          >
+            <span className="icon">
+              <i className="fas fa-times"></i>
+            </span>
+          </button>
+        </header>
+        <div className="card-content">
+          {description}
+          <div style={{ display: isOpen ? 'block' : 'none' }}>{children}</div>
+        </div>
       </div>
-
-      <ConfirmModal
-        title="Delete chapter"
-        contnet="You are about to delete chapter with multiple cells."
-        isShowing={showModal}
-        setIsShowing={setShowModal}
-        onConfirm={onConfirmModal}
-      />
-    </div>
+      {showModal && (
+        <ConfirmModal
+          contnet="You are about to delete chapter with multiple cells."
+          onCancel={() => setShowModal(false)}
+          onConfirm={onConfirmModal}
+        />
+      )}
+    </>
   );
 };
 
