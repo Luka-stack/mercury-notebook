@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mercury-notebook/local-api": "^3.0.0"
+    "@mercury-notebook/local-api": "^3.0.1"
   },
   "devDependencies": {
     "@types/node": "^16.9.4",

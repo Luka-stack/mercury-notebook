@@ -27,7 +27,7 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "@mercury-notebook/local-client": "^3.0.0",
+    "@mercury-notebook/local-client": "^3.0.1",
     "cors": "^2.8.5",
     "directory-tree": "^3.2.2",
     "express": "^4.17.1",
