@@ -50,9 +50,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Gateway = void 0;
 var socket_io_1 = require("socket.io");
 var Gateway = /** @class */ (function () {
-    function Gateway(
-    // port: number,
-    server, fileService, notebookService) {
+    function Gateway(server, fileService, notebookService) {
         this.fileService = fileService;
         this.notebookService = notebookService;
         this.ioServer = new socket_io_1.Server(server);
