@@ -4,15 +4,6 @@
   width: calc(100% - 10px);
 }
 
-/* .editor-wrapper .button-format {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  z-index: 20;
-  opacity: 0;
-  transition: opacity 0.3s;
-} */
-
 .editor-wrapper .editor-controls {
   display: flex;
   flex-direction: column;
@@ -27,7 +18,3 @@
 .editor-wrapper:hover .editor-controls {
   opacity: 1;
 }
-
-/* .editor-wrapper:hover .button-format {
-  opacity: 1;
-} */

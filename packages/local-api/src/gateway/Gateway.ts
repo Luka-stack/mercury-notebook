@@ -9,7 +9,6 @@ export class Gateway {
   private readonly ioServer: Server;
 
   constructor(
-    // port: number,
     server: http.Server,
     private readonly fileService: FileService,
     private readonly notebookService: NotebookService

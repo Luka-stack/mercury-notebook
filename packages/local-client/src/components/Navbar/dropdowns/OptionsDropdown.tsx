@@ -42,7 +42,7 @@ const OptionsDropdown = () => {
       {shortcutsInfo && (
         <ShortcutsModal
           onCancel={() => {
-            setShortcutsInfo(true);
+            setShortcutsInfo(false);
           }}
         />
       )}

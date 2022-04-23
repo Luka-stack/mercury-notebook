@@ -1,5 +1,6 @@
-import { ReactNode } from 'react';
 import './Navbar.css';
+
+import { ReactNode } from 'react';
 
 interface NavbarProps {
   width?: string;

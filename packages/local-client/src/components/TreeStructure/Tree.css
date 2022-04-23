@@ -1,32 +1,32 @@
-.tree span {
+.tree--explorer span {
   color: #1abc9c;
 }
 
-.tree {
+.tree--explorer {
   cursor: pointer;
 }
 
-.tree i.used {
+.tree--explorer i.used {
   color: #f1b70e;
 }
 
-.tree div {
+.tree--explorer div {
   padding: 6px 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.tree div.active {
+.tree--explorer div.active {
   background-color: #1abc9c;
 }
 
-.tree div.active span {
+.tree--explorer div.active span {
   color: white;
 }
 
-.tree div:hover {
+.tree--explorer div:hover {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-.tree div:hover span {
+.tree--explorer div:hover span {
   color: white;
 }

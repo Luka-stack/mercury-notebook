@@ -50,6 +50,7 @@ const TreeHub: React.FC<TreeHubProps> = ({
 
   const onTreeElementClick = (tree: FileTree) => {
     if (tree.type === 'directory') {
+      setSelectedFiles([]);
       setCurrDir(tree.id);
 
       if (breadcrumb) {
@@ -72,11 +73,13 @@ const TreeHub: React.FC<TreeHubProps> = ({
   const onBreadcrumbClick = (part: PartialTree, id: number) => {
     setCurrDir(part.id);
     setBreadcrumb(breadcrumb!.slice(0, id + 1));
+    setSelectedFiles([]);
   };
 
   const rootDirClicked = () => {
     setCurrDir('');
     setBreadcrumb([]);
+    setSelectedFiles([]);
   };
 
   const renderFiles = () => {

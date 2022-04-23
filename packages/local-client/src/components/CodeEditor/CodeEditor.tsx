@@ -1,5 +1,5 @@
+import './Syntax.css';
 import './CodeEditor.css';
-import './syntax.css';
 
 import { useRef } from 'react';
 import parser from 'prettier/parser-babel';

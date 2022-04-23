@@ -19,7 +19,7 @@ const FileTitle = () => {
   const onNameChanged = (filename: string) => {
     const fullPath = path + windowRouter.getFilePath();
 
-    renameFile(fullPath, fullPath.replace(`${name}.jsnb`, filename), () => {
+    renameFile(fullPath, fullPath.replace(name, filename), () => {
       setIsShowing(false);
       windowRouter.updateRoute(name, filename);
       setName(filename);
@@ -40,7 +40,7 @@ const FileTitle = () => {
       <div
         onClick={() => setIsShowing(true)}
         className="cst-navbar-item cst-is-hoverable"
-        style={{ marginLeft: '64px' }}
+        style={{ left: '5%' }}
       >
         <b
           className="subtitle"
@@ -57,7 +57,7 @@ const FileTitle = () => {
       {isShowing && (
         <NameInputModal
           type="file"
-          currName="name"
+          currName={name}
           setFilename={onNameChanged}
           onCancel={onCancel}
         />

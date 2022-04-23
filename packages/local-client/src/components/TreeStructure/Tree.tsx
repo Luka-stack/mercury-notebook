@@ -9,7 +9,7 @@ interface TreeProps {
 
 const Tree: React.FC<TreeProps> = ({ treeData }) => {
   return (
-    <ul className="tree">
+    <ul className="tree--explorer">
       {treeData.map((node) => (
         <TreeNode node={node} key={node.id} />
       ))}
