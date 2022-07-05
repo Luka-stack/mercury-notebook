@@ -1,6 +1,6 @@
 {
   "name": "mercury-notebook",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "A interactive, web-based notebook environment for javascript.",
   "bin": "dist/index.js",
   "publishConfig": {
@@ -21,7 +21,7 @@
   "license": "MIT",
   "author": "Lukasz Rafa  <lkr.rafa@gmail.com> (https://github.com/Luka-stack)",
   "dependencies": {
-    "@mercury-notebook/local-api": "^3.0.3"
+    "@mercury-notebook/local-api": "^3.0.4"
   },
   "devDependencies": {
     "@types/node": "^16.9.4",
