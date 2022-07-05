@@ -154,7 +154,10 @@ var Gateway = /** @class */ (function () {
                         return [4 /*yield*/, this.notebookService.saveNotebook(payload.path, payload.data, isNew)];
                     case 1:
                         id = _a.sent();
-                        if (!isNew) {
+                        if (isNew) {
+                            this.emitTree();
+                        }
+                        else {
                             socket.broadcast.to(id).emit('notebookChanged');
                         }
                         ack(undefined);

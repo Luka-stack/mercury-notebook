@@ -40,6 +40,6 @@ export namespace windowRouter {
       return `/#/${ROOT_NOTEBOOK_PATH}/${filename}`;
     }
 
-    return `/${ROOT_NOTEBOOK_PATH}/${path}/${filename}`;
+    return `/#/${ROOT_NOTEBOOK_PATH}/${path}/${filename}`;
   };
 }
