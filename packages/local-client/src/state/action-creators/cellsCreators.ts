@@ -75,6 +75,8 @@ export const fetchCells = () => {
     });
 
     const filepath = windowRouter.getFilePath();
+    console.log(filepath);
+
     socket.emit(
       'fetchCells',
       { filepath },
