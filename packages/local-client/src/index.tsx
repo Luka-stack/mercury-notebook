@@ -5,23 +5,17 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import ReactDOM from 'react-dom';
 import { store } from './state';
 import { Provider } from 'react-redux';
-import {
-  BrowserRouter,
-  HashRouter,
-  MemoryRouter,
-  Route,
-  Routes,
-} from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 
 import HubLayout from './layouts/HubLayout';
 import SandboxLayout from './layouts/SandboxLayout';
 
 const App = () => {
   return (
-    <HashRouter>
+    <Router>
       <Routes>
         <Route
-          path="/hub"
+          path="/"
           element={
             <Provider store={store}>
               <HubLayout />
@@ -29,7 +23,7 @@ const App = () => {
           }
         />
         <Route
-          path="/notebooks/:file"
+          path="/notebooks/*"
           element={
             <Provider store={store}>
               <SandboxLayout />
@@ -37,7 +31,7 @@ const App = () => {
           }
         />
       </Routes>
-    </HashRouter>
+    </Router>
   );
 };
 

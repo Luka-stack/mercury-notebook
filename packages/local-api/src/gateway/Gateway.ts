@@ -107,7 +107,9 @@ export class Gateway {
         isNew
       );
 
-      if (!isNew) {
+      if (isNew) {
+        this.emitTree();
+      } else {
         socket.broadcast.to(id).emit('notebookChanged');
       }
 

@@ -28,8 +28,6 @@ const SandboxLayout = () => {
   const { overwriteModal } = useTypedSelector((state) => state.notifications);
 
   useEffect(() => {
-    console.log(window.location);
-
     socket.on('tree', (data) => {
       updateTree(data);
     });
