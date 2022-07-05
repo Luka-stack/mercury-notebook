@@ -1,6 +1,6 @@
 {
   "name": "@mercury-notebook/local-api",
-  "version": "3.0.4",
+  "version": "3.1.0",
   "description": "",
   "publishConfig": {
     "access": "public"
@@ -27,7 +27,7 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "@mercury-notebook/local-client": "^3.0.4",
+    "@mercury-notebook/local-client": "^3.1.0",
     "cors": "^2.8.5",
     "directory-tree": "^3.2.2",
     "express": "^4.17.1",
